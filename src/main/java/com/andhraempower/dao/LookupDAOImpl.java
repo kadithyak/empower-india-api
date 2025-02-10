@@ -1,6 +1,7 @@
 package com.andhraempower.dao;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -65,5 +66,16 @@ public List<CategoryLookup> getCategories() {
     List<CategoryLookup> categories = query.getResultList();
     return categories;
  }
-    
+
+    @Override
+    public Optional<Integer> getVillageProposalIdByVillageId(Integer villageId) {
+        TypedQuery<Integer> query = entityManager.createQuery(
+                "SELECT vp.id FROM VillageProposal vp WHERE vp.villageId = :villageId", Integer.class
+        );
+        query.setParameter("villageId", villageId);
+
+        List<Integer> result = query.getResultList();
+        return result.isEmpty() ? Optional.empty() : Optional.of(result.get(0));
+    }
+
 }

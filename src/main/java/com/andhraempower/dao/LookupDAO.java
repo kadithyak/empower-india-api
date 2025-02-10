@@ -2,6 +2,7 @@ package com.andhraempower.dao;
 
 import java.util.List;
 import java.util.Locale.Category;
+import java.util.Optional;
 
 import com.andhraempower.entity.CategoryLookup;
 import com.andhraempower.entity.DistrictLookup;
@@ -20,5 +21,7 @@ public interface LookupDAO {
     List<VillageLookup> getVillagesByMandal(Integer mandalId);
 
     List<CategoryLookup> getCategories();
+
+    Optional<Integer> getVillageProposalIdByVillageId(Integer villageId);
 
 }
