@@ -3,10 +3,8 @@ package com.andhraempower.controller;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.*;
 
 import com.andhraempower.entity.CategoryLookup;
 import com.andhraempower.entity.DistrictLookup;
@@ -15,6 +13,7 @@ import com.andhraempower.entity.StateLookup;
 import com.andhraempower.entity.VillageLookup;
 import com.andhraempower.service.LookupService;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/api/lookup")
 public class LookupController {
