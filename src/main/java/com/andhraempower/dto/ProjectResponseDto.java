@@ -23,4 +23,7 @@ public class ProjectResponseDto {
     private String description;
     private String createdBy;
     private String lastUpdatedBy;
+    private String villageName;
+    private String mandalName;
+    private String districtName;
 }

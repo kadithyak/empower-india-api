@@ -85,24 +85,7 @@ public class ProjectService {
     }
 
     public List<ProjectResponseDto> getProjects() {
-        List<VillageProject> projects = projectRepository.findAll();
-
-        return projects.stream().map(project -> new ProjectResponseDto(
-                project.getId(),
-                project.getVillageProposalId(),
-                project.getProjectCategory().getName(),
-                project.getProjectName(),
-                project.getStatus(),
-                project.getLocation(),
-                project.getLatitude(),
-                project.getLongitude(),
-                project.getProjectEstimation(),
-                project.getGovernmentShare(),
-                project.getPublicShare(),
-                project.getIsNew(),
-                project.getDescription(),
-                project.getCreatedBy(),
-                project.getLastUpdatedBy()
-        )).collect(Collectors.toList());
+        log.info("Fetching all projects details.");
+        return projectRepository.findAllProjects();
     }
 }
