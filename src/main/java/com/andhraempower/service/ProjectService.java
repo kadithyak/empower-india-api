@@ -88,4 +88,9 @@ public class ProjectService {
         log.info("Fetching all projects details.");
         return projectRepository.findAllProjects();
     }
+
+    public List<ProjectResponseDto> searchProjectsByDistrictMandalVillageCode(Long districtCode, Long mandalCode, Long villageCode) {
+        log.info("searchProjectsByDistrictMandalVillageCode districtCode {}, mandalCode{}, villageCode {}", districtCode, mandalCode, villageCode);
+        return projectRepository.searchProjects(districtCode, mandalCode, villageCode);
+    }
 }
