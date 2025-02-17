@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 @CrossOrigin
 @RestController
-@RequestMapping("/projects")
+@RequestMapping("/api/v1/project")
 @RequiredArgsConstructor
 @Slf4j
 public class ProjectController {
@@ -27,7 +27,7 @@ public class ProjectController {
     /**
      * GET API - Fetch all projects
      */
-    @GetMapping(value = "/getProjects", produces = {EmpowerConstants.APPLICATION_JSON, EmpowerConstants.TEXT_PLAIN})
+    @GetMapping(produces = {EmpowerConstants.APPLICATION_JSON, EmpowerConstants.TEXT_PLAIN})
     @Operation(summary = "Retrieves a list of all projects.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = EmpowerConstants.SUCCESS_CODE, description = EmpowerConstants.SUCCESS_CODE_DESC),
@@ -42,7 +42,7 @@ public class ProjectController {
         return ResponseEntity.ok(projects);
     }
 
-    @PostMapping(value = "/saveProject", consumes = EmpowerConstants.APPLICATION_JSON, produces = EmpowerConstants.TEXT_PLAIN)
+    @PostMapping(consumes = EmpowerConstants.APPLICATION_JSON, produces = EmpowerConstants.TEXT_PLAIN)
     @Operation(summary = "Saves a new project to the database.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = EmpowerConstants.SUCCESS_CODE, description = "Project saved successfully"),
@@ -55,6 +55,21 @@ public class ProjectController {
     public ResponseEntity<String> saveProject(@RequestBody ProjectRequestDto projectRequestDto) {
         projectService.saveProject(projectRequestDto);
         return ResponseEntity.ok("New project saved successfully!");
+    }
+
+    @PutMapping(consumes = EmpowerConstants.APPLICATION_JSON, produces = EmpowerConstants.TEXT_PLAIN)
+    @Operation(summary = "updates existing project to the database.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = EmpowerConstants.SUCCESS_CODE, description = "Project Updated successfully"),
+            @ApiResponse(responseCode = EmpowerConstants.BAD_REQUEST_CODE, description = "Invalid request data"),
+            @ApiResponse(responseCode = EmpowerConstants.UNAUTHORIZED_CODE, description = EmpowerConstants.UNAUTHORIZED_CODE_DESC),
+            @ApiResponse(responseCode = EmpowerConstants.FORBIDDEN_CODE, description = EmpowerConstants.FORBIDDEN_CODE_DESC),
+            @ApiResponse(responseCode = EmpowerConstants.RESOURCE_NOT_FOUND_CODE, description = EmpowerConstants.RESOURCE_NOT_FOUND_CODE_DESC),
+            @ApiResponse(responseCode = EmpowerConstants.UNEXPECTED_SERVER_ERROR_CODE, description = "Server error while saving project")
+    })
+    public ResponseEntity<String> updateProject(@RequestBody ProjectRequestDto projectRequestDto) {
+        projectService.updateProject(projectRequestDto);
+        return ResponseEntity.ok("Project updates successfully!");
     }
 
     @GetMapping(value = "/searchProjects", produces = {EmpowerConstants.APPLICATION_JSON, EmpowerConstants.TEXT_PLAIN})

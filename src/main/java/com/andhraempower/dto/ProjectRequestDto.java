@@ -5,18 +5,21 @@ import lombok.*;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 public class ProjectRequestDto {
-    private String district;
-    private String mandal;
-    private String village;
+    private Long id;
+    private Integer districtId;
+    private Integer mandalId;
+    private Integer villageId;
     private String location;
     private Double latitude;
     private Double longitude;
-    private String projectCategory;
-    private String projectName;
+    private Integer projectCategoryId;
+    private String projectType;
     private String projectNeed;
     private Double projectEstimation;
     private Double governmentShare;
     private Double publicShare;
     private String description;
+    private String statusCode;
 }

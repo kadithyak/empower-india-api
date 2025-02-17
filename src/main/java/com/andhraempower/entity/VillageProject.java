@@ -16,15 +16,12 @@ public class VillageProject {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "village_proposal_id", nullable = false)
-    private Integer villageProposalId;
-
     @ManyToOne
     @JoinColumn(name = "project_category_id", nullable = false)
     private CategoryLookup projectCategory;
 
-    @Column(name = "project_name", nullable = false)
-    private String projectName;
+    @Column(name = "project_type", nullable = false)
+    private String projectType;
 
     @Column(name = "location")
     private String location;
@@ -58,5 +55,12 @@ public class VillageProject {
 
     @Column(name = "last_updated_by", nullable = false)
     private String lastUpdatedBy;
+
+    @Column(name = "STATUS_CODE", nullable = false)
+    private String statusCode;
+
+    @ManyToOne
+    @JoinColumn(name = "village_id", nullable = false)
+    private VillageLookup village;
 
 }

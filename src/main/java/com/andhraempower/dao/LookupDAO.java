@@ -24,4 +24,7 @@ public interface LookupDAO {
 
     Optional<Integer> getVillageProposalIdByVillageId(Integer villageId);
 
+    Optional<VillageLookup> getVillageById(Integer villageId);
+    Optional<CategoryLookup> getCategorybyId(Integer categoryId);
+
 }

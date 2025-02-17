@@ -9,9 +9,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ProjectResponseDto {
     private Long id;
-    private Integer villageProposalId;
     private String projectCategory;
-    private String projectName;
+    private String projectType;
     private String status;
     private String location;
     private Double latitude;

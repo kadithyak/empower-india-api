@@ -1,5 +1,6 @@
 package com.andhraempower.service;
 
+import com.andhraempower.constants.StatusEnum;
 import com.andhraempower.dto.ProjectRequestDto;
 import com.andhraempower.dto.ProjectResponseDto;
 import com.andhraempower.entity.VillageProject;
@@ -26,62 +27,28 @@ public class ProjectService {
     private final LookupDAO lookupDAO;
 
     public void saveProject(ProjectRequestDto projectRequestDto) {
-        log.info("Saving new project: {}", projectRequestDto.getProjectName());
-
-        Optional<VillageLookup> villageOpt = lookupDAO.getVillagesByMandal(
-                        lookupDAO.getMandalsByDistrict(
-                                        lookupDAO.getDistrictsByState(1)
-                                                .stream()
-                                                .filter(d -> d.getName().equalsIgnoreCase(projectRequestDto.getDistrict()))
-                                                .findFirst()
-                                                .orElseThrow(() -> new IllegalArgumentException("Invalid District Name: " + projectRequestDto.getDistrict()))
-                                                .getId()
-                                )
-                                .stream()
-                                .filter(m -> m.getName().equalsIgnoreCase(projectRequestDto.getMandal()))
-                                .findFirst()
-                                .orElseThrow(() -> new IllegalArgumentException("Invalid Mandal Name: " + projectRequestDto.getMandal()))
-                                .getId()
-                ).stream()
-                .filter(v -> v.getName().equalsIgnoreCase(projectRequestDto.getVillage()))
-                .findFirst();
-
-        if (villageOpt.isEmpty()) {
-            throw new IllegalArgumentException("Invalid Village Name: " + projectRequestDto.getVillage());
-        }
-        VillageLookup village = villageOpt.get();
-
-        Integer villageProposalId = lookupDAO.getVillageProposalIdByVillageId(village.getId())
-                .orElseThrow(() -> new IllegalArgumentException("No proposal found for Village ID: " + village.getId()));
-
-        Optional<CategoryLookup> categoryOpt = lookupDAO.getCategories().stream()
-                .filter(c -> c.getName().equalsIgnoreCase(projectRequestDto.getProjectCategory()))
-                .findFirst();
-
-        if (categoryOpt.isEmpty()) {
-            throw new IllegalArgumentException("Invalid Project Category: " + projectRequestDto.getProjectCategory());
-        }
-        CategoryLookup category = categoryOpt.get();
-
-        VillageProject project = VillageProject.builder()
-                .villageProposalId(villageProposalId)
-                .location(projectRequestDto.getLocation())
-                .latitude(projectRequestDto.getLatitude())
-                .longitude(projectRequestDto.getLongitude())
-                .projectCategory(category)
-                .projectName(projectRequestDto.getProjectName())
-                .isNew("New".equalsIgnoreCase(projectRequestDto.getProjectNeed()))
-                .projectEstimation(projectRequestDto.getProjectEstimation())
-                .governmentShare(projectRequestDto.getGovernmentShare())
-                .publicShare(projectRequestDto.getPublicShare())
-                .description(projectRequestDto.getDescription())
-                .status("Open")
-                .createdBy("Admin")
-                .lastUpdatedBy("Admin")
-                .build();
-
+        log.info("Saving new project: {}", projectRequestDto);
+        Optional<VillageLookup> village = getVillageLookup(projectRequestDto.getVillageId());
+        Optional<CategoryLookup> category = getCategoryLookup(projectRequestDto.getProjectCategoryId());
+        VillageProject project = getVillageProject(projectRequestDto, category, village);
+        project.setStatusCode(StatusEnum.NEW.name());
         projectRepository.save(project);
         log.info("New Project saved successfully!");
+    }
+    public void updateProject(ProjectRequestDto projectRequestDto) {
+        projectRepository.findById(projectRequestDto.getId())
+                .ifPresentOrElse(project -> {
+                    projectRepository.save(getUpdatedProject(project, projectRequestDto));
+                    log.info("New Project Updated successfully!");
+                }, () -> {throw new IllegalArgumentException("Project Not found for the given Id : " + projectRequestDto.getId());});
+    }
+
+    private Optional<CategoryLookup> getCategoryLookup(Integer categoryId) {
+        return lookupDAO.getCategorybyId(categoryId);
+    }
+
+    private Optional<VillageLookup> getVillageLookup(Integer villageId) {
+        return lookupDAO.getVillageById(villageId);
     }
 
     public List<ProjectResponseDto> getProjects() {
@@ -92,5 +59,61 @@ public class ProjectService {
     public List<ProjectResponseDto> searchProjectsByDistrictMandalVillageCode(Long districtCode, Long mandalCode, Long villageCode) {
         log.info("searchProjectsByDistrictMandalVillageCode districtCode {}, mandalCode{}, villageCode {}", districtCode, mandalCode, villageCode);
         return projectRepository.searchProjects(districtCode, mandalCode, villageCode);
+    }
+
+    private VillageProject getUpdatedProject(VillageProject villageProject, ProjectRequestDto projectRequestDto){
+        villageProject.setLocation(projectRequestDto.getLocation());
+        villageProject.setLatitude(projectRequestDto.getLatitude());
+        villageProject.setLongitude(projectRequestDto.getLongitude());
+        villageProject.setProjectType(projectRequestDto.getProjectType());
+        villageProject.setIsNew("New".equalsIgnoreCase(projectRequestDto.getProjectNeed()));
+        villageProject.setGovernmentShare(projectRequestDto.getGovernmentShare());
+        villageProject.setProjectEstimation(projectRequestDto.getProjectEstimation());
+        villageProject.setPublicShare(projectRequestDto.getPublicShare());
+        villageProject.setDescription(projectRequestDto.getDescription());
+
+        if(!villageProject.getVillage().getId().equals(projectRequestDto.getVillageId())) {
+            Optional<VillageLookup> villageLookup = getVillageLookup(projectRequestDto.getVillageId());
+            if(villageLookup.isEmpty()){
+                throw new IllegalArgumentException("Invalid Village Id : " + projectRequestDto.getVillageId());
+            }
+            villageProject.setVillage(villageLookup.get());
+        }
+
+        if(!villageProject.getProjectCategory().getId().equals(projectRequestDto.getProjectCategoryId())) {
+            Optional<CategoryLookup> categoryLookup = getCategoryLookup(projectRequestDto.getProjectCategoryId());
+            if(categoryLookup.isEmpty()) {
+                throw new IllegalArgumentException("Invalid Category Id : " + projectRequestDto.getProjectCategoryId());
+            }
+            villageProject.setProjectCategory(categoryLookup.get());
+        }
+        return villageProject;
+
+    }
+
+    private static VillageProject getVillageProject(ProjectRequestDto projectRequestDto
+            , Optional<CategoryLookup> category, Optional<VillageLookup> village) {
+        if (village.isEmpty()) {
+            throw new IllegalArgumentException("Invalid Village Id : " + projectRequestDto.getVillageId());
+        }
+        if(category.isEmpty()) {
+            throw new IllegalArgumentException("Invalid Category Id : " + projectRequestDto.getProjectCategoryId());
+        }
+        return VillageProject.builder()
+                .location(projectRequestDto.getLocation())
+                .latitude(projectRequestDto.getLatitude())
+                .longitude(projectRequestDto.getLongitude())
+                .projectCategory(category.get())
+                .projectType(projectRequestDto.getProjectType())
+                .isNew("New".equalsIgnoreCase(projectRequestDto.getProjectNeed()))
+                .projectEstimation(projectRequestDto.getProjectEstimation())
+                .governmentShare(projectRequestDto.getGovernmentShare())
+                .publicShare(projectRequestDto.getPublicShare())
+                .description(projectRequestDto.getDescription())
+                .village(village.get())
+                .status("Open")
+                .createdBy("Admin")
+                .lastUpdatedBy("Admin")
+                .build();
     }
 }

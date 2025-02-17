@@ -15,7 +15,7 @@ import com.andhraempower.service.LookupService;
 
 @CrossOrigin
 @RestController
-@RequestMapping("/api/lookup")
+@RequestMapping("/api/v1/lookup")
 public class LookupController {
 
     private final LookupService lookupService;
