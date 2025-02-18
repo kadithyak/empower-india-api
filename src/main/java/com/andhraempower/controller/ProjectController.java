@@ -72,7 +72,7 @@ public class ProjectController {
         return ResponseEntity.ok("Project updates successfully!");
     }
 
-    @GetMapping(value = "/searchProjects", produces = {EmpowerConstants.APPLICATION_JSON, EmpowerConstants.TEXT_PLAIN})
+    @GetMapping(value = "/search", produces = {EmpowerConstants.APPLICATION_JSON, EmpowerConstants.TEXT_PLAIN})
     @Operation(summary = "Retrieves a list of all projects.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = EmpowerConstants.SUCCESS_CODE, description = EmpowerConstants.SUCCESS_CODE_DESC),
