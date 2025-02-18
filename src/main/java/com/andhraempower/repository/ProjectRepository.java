@@ -13,10 +13,10 @@ import java.util.List;
 public interface ProjectRepository extends JpaRepository<VillageProject, Long> {
 
     @Query("SELECT new com.andhraempower.dto.ProjectResponseDto( " +
-            "vp.id, vp.projectCategory.name, vp.projectType, vp.status, vp.location, " +
+            "vp.id, vp.projectCategory.name,vp.projectCategory.id, vp.projectType, vp.status, vp.location, " +
             "vp.latitude, vp.longitude, vp.projectEstimation, vp.governmentShare, vp.publicShare, " +
             "vp.isNew, vp.description, vp.createdBy, vp.lastUpdatedBy, " +
-            "vl.name, ml.name, dl.name) " +
+            "vl.name,vl.id, ml.name,ml.id, dl.name,dl.id) " +
             "FROM VillageProject vp " +
             "JOIN VillageLookup vl ON vp.village.id = vl.id " +
             "JOIN MandalLookup ml ON vl.mandalId = ml.id " +
@@ -24,10 +24,10 @@ public interface ProjectRepository extends JpaRepository<VillageProject, Long> {
     List<ProjectResponseDto> findAllProjects();
 
     @Query("SELECT new com.andhraempower.dto.ProjectResponseDto( " +
-            "vp.id, vp.projectCategory.name, vp.projectType, vp.status, vp.location, " +
+            "vp.id, vp.projectCategory.name,vp.projectCategory.id, vp.projectType, vp.status, vp.location, " +
             "vp.latitude, vp.longitude, vp.projectEstimation, vp.governmentShare, vp.publicShare, " +
             "vp.isNew, vp.description, vp.createdBy, vp.lastUpdatedBy, " +
-            "vl.name, ml.name, dl.name) " +
+            "vl.name,vl.id, ml.name,ml.id, dl.name,dl.id) " +
             "FROM VillageProject vp " +
             "JOIN VillageLookup vl ON vp.village.id = vl.id " +
             "JOIN MandalLookup ml ON vl.mandalId = ml.id " +

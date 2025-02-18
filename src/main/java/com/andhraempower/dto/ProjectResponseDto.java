@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 public class ProjectResponseDto {
     private Long id;
     private String projectCategory;
+    private Integer projectCategoryId;
     private String projectType;
     private String status;
     private String location;
@@ -23,6 +24,9 @@ public class ProjectResponseDto {
     private String createdBy;
     private String lastUpdatedBy;
     private String villageName;
+    private int villageId;
     private String mandalName;
+    private int mandalId;
     private String districtName;
+    private int districtId;
 }
