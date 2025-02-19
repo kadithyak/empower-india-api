@@ -11,7 +11,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name="project_lookup")
+@Table(name="project_type_lookup")
 public class ProjectLookup {
 
     @Id

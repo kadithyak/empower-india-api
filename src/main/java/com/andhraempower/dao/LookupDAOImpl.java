@@ -60,7 +60,7 @@ public class LookupDAOImpl implements LookupDAO {
 
         TypedQuery<CategoryLookup> query = entityManager.createQuery(
                 "select i from CategoryLookup i "
-                        + "JOIN FETCH i.projects ", CategoryLookup.class);
+                        + "LEFT JOIN FETCH i.projects ", CategoryLookup.class);
 
         // execute query
         List<CategoryLookup> categories = query.getResultList();

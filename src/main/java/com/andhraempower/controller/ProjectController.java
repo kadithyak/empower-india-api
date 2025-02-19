@@ -38,8 +38,14 @@ public class ProjectController {
             @ApiResponse(responseCode = EmpowerConstants.UNEXPECTED_SERVER_ERROR_CODE, description = EmpowerConstants.UNEXPECTED_SERVER_ERROR_CODE_DESC)
     })
     public ResponseEntity<List<ProjectResponseDto>> getProjects() {
-        List<ProjectResponseDto> projects = projectService.getProjects();
-        return ResponseEntity.ok(projects);
+        try {
+            List<ProjectResponseDto> projects = projectService.getProjects();
+            log.debug("Projects List {}", projects);
+            return ResponseEntity.ok(projects);
+        }catch (Exception e){
+            log.error("Exception while fetching the projects", e);
+            return ResponseEntity.internalServerError().build();
+        }
     }
 
     @PostMapping(consumes = EmpowerConstants.APPLICATION_JSON, produces = EmpowerConstants.TEXT_PLAIN)
@@ -53,8 +59,14 @@ public class ProjectController {
             @ApiResponse(responseCode = EmpowerConstants.UNEXPECTED_SERVER_ERROR_CODE, description = "Server error while saving project")
     })
     public ResponseEntity<String> saveProject(@RequestBody ProjectRequestDto projectRequestDto) {
-        projectService.saveProject(projectRequestDto);
-        return ResponseEntity.ok("New project saved successfully!");
+        try {
+            log.debug("Request for saving project : {}", projectRequestDto);
+            projectService.saveProject(projectRequestDto);
+            return ResponseEntity.ok("New project saved successfully!");
+        }catch (Exception e){
+            log.error("Exception while saving the project", e);
+            return ResponseEntity.internalServerError().build();
+        }
     }
 
     @PutMapping(consumes = EmpowerConstants.APPLICATION_JSON, produces = EmpowerConstants.TEXT_PLAIN)
@@ -68,8 +80,14 @@ public class ProjectController {
             @ApiResponse(responseCode = EmpowerConstants.UNEXPECTED_SERVER_ERROR_CODE, description = "Server error while saving project")
     })
     public ResponseEntity<String> updateProject(@RequestBody ProjectRequestDto projectRequestDto) {
-        projectService.updateProject(projectRequestDto);
-        return ResponseEntity.ok("Project updates successfully!");
+        try {
+            log.debug("Request for updating project : {}", projectRequestDto);
+            projectService.updateProject(projectRequestDto);
+            return ResponseEntity.ok("Project updates successfully!");
+        }catch (Exception e){
+            log.error("Exception while updating the project", e);
+            return ResponseEntity.internalServerError().build();
+        }
     }
 
     @GetMapping(value = "/search", produces = {EmpowerConstants.APPLICATION_JSON, EmpowerConstants.TEXT_PLAIN})
@@ -82,9 +100,10 @@ public class ProjectController {
             @ApiResponse(responseCode = EmpowerConstants.RESOURCE_NOT_FOUND_CODE, description = EmpowerConstants.RESOURCE_NOT_FOUND_CODE_DESC),
             @ApiResponse(responseCode = EmpowerConstants.UNEXPECTED_SERVER_ERROR_CODE, description = EmpowerConstants.UNEXPECTED_SERVER_ERROR_CODE_DESC)
     })
-    public ResponseEntity<List<ProjectResponseDto>> searchProjects(@RequestParam(name = "districtId", required = true) Long districtCode
+    public ResponseEntity<List<ProjectResponseDto>> searchProjects(@RequestParam(name = "districtId") Long districtCode
             , @RequestParam(name = "mandalId", required = false) Long mandalCode, @RequestParam(name = "villageId", required = false) Long villageCode) {
         try {
+            log.debug("Request received for search project districtId : {}, mandalId : {}, villageId : {}", districtCode, mandalCode, villageCode);
             List<ProjectResponseDto> projects = projectService.searchProjectsByDistrictMandalVillageCode(districtCode, mandalCode, villageCode);
             return ResponseEntity.ok(projects);
         }catch (Exception e){
