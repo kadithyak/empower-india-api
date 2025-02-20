@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 import java.util.List;
 @CrossOrigin
@@ -40,10 +41,10 @@ public class ProjectController {
     public ResponseEntity<List<ProjectResponseDto>> getProjects() {
         try {
             List<ProjectResponseDto> projects = projectService.getProjects();
-            log.debug("Projects List {}", projects);
+           // log.debug("Projects List {}", projects);
             return ResponseEntity.ok(projects);
         }catch (Exception e){
-            log.error("Exception while fetching the projects", e);
+            //log.error("Exception while fetching the projects", e);
             return ResponseEntity.internalServerError().build();
         }
     }
@@ -60,11 +61,11 @@ public class ProjectController {
     })
     public ResponseEntity<String> saveProject(@RequestBody ProjectRequestDto projectRequestDto) {
         try {
-            log.debug("Request for saving project : {}", projectRequestDto);
+           // log.debug("Request for saving project : {}", projectRequestDto);
             projectService.saveProject(projectRequestDto);
             return ResponseEntity.ok("New project saved successfully!");
         }catch (Exception e){
-            log.error("Exception while saving the project", e);
+           // log.error("Exception while saving the project", e);
             return ResponseEntity.internalServerError().build();
         }
     }
@@ -81,11 +82,11 @@ public class ProjectController {
     })
     public ResponseEntity<String> updateProject(@RequestBody ProjectRequestDto projectRequestDto) {
         try {
-            log.debug("Request for updating project : {}", projectRequestDto);
+           // log.debug("Request for updating project : {}", projectRequestDto);
             projectService.updateProject(projectRequestDto);
             return ResponseEntity.ok("Project updates successfully!");
         }catch (Exception e){
-            log.error("Exception while updating the project", e);
+           // log.error("Exception while updating the project", e);
             return ResponseEntity.internalServerError().build();
         }
     }
@@ -103,11 +104,11 @@ public class ProjectController {
     public ResponseEntity<List<ProjectResponseDto>> searchProjects(@RequestParam(name = "districtId") Long districtCode
             , @RequestParam(name = "mandalId", required = false) Long mandalCode, @RequestParam(name = "villageId", required = false) Long villageCode) {
         try {
-            log.debug("Request received for search project districtId : {}, mandalId : {}, villageId : {}", districtCode, mandalCode, villageCode);
+          //  log.debug("Request received for search project districtId : {}, mandalId : {}, villageId : {}", districtCode, mandalCode, villageCode);
             List<ProjectResponseDto> projects = projectService.searchProjectsByDistrictMandalVillageCode(districtCode, mandalCode, villageCode);
             return ResponseEntity.ok(projects);
         }catch (Exception e){
-            log.error("Error while searching projects", e);
+           // log.error("Error while searching projects", e);
             return ResponseEntity.internalServerError().build();
         }
     }
