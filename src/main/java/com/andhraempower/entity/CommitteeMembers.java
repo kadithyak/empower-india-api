@@ -14,11 +14,11 @@ import java.time.LocalDateTime;
 @Setter
 @Entity
 @Table(name = "village_committee")
-public class CommitteeMembers {
+public class CommitteeMembers extends Audit{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     @Column(name = "first_name")
     private String firstName;
@@ -43,16 +43,4 @@ public class CommitteeMembers {
 
     @Column(name = "village_id")
     private Integer villageId;
-
-    @Column(name = "created_by")
-    private String createdBy;
-
-    @Column(name = "created_date", columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP")
-    private LocalDateTime createdDate;
-
-    @Column(name = "last_updated_by")
-    private String lastUpdatedBy;
-
-    @Column(name = "last_updated_date", columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
-    private LocalDateTime lastUpdatedDate;
 }

@@ -17,4 +17,6 @@ public class EmpowerConstants {
     public static final String RESOURCE_NOT_FOUND_CODE_DESC = "Resource not found";
     public static final String UNEXPECTED_SERVER_ERROR_CODE_DESC = "Unexpected Server Error";
 
+    public static final String USER_ADMIN = "Admin";
+
 }
