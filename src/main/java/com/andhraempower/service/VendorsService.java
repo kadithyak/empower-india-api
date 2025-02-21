@@ -1,6 +1,5 @@
 package com.andhraempower.service;
 
-import com.andhraempower.entity.Donars;
 import com.andhraempower.entity.Vendors;
 import com.andhraempower.repository.VendorsRepository;
 import lombok.AllArgsConstructor;

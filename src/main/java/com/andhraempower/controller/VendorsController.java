@@ -1,7 +1,6 @@
 package com.andhraempower.controller;
 
 import com.andhraempower.constants.EmpowerConstants;
-import com.andhraempower.entity.Donars;
 import com.andhraempower.entity.Vendors;
 import com.andhraempower.service.VendorsService;
 import io.swagger.v3.oas.annotations.Operation;
