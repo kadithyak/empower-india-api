@@ -15,7 +15,7 @@ import java.util.List;
 
 @CrossOrigin
 @RestController
-@RequestMapping("/Vendors")
+@RequestMapping("/api/v1/vendors")
 @RequiredArgsConstructor
 @Slf4j
 public class VendorsController {
@@ -23,7 +23,7 @@ public class VendorsController {
     @Autowired
     private VendorsService VendorsService;
 
-    @GetMapping(value="/get",produces = {EmpowerConstants.APPLICATION_JSON, EmpowerConstants.TEXT_PLAIN})
+    @GetMapping(produces = {EmpowerConstants.APPLICATION_JSON, EmpowerConstants.TEXT_PLAIN})
     @Operation(summary = "Fetches Vendors.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = EmpowerConstants.SUCCESS_CODE, description = EmpowerConstants.SUCCESS_CODE_DESC),
@@ -33,12 +33,12 @@ public class VendorsController {
             @ApiResponse(responseCode = EmpowerConstants.RESOURCE_NOT_FOUND_CODE, description = EmpowerConstants.RESOURCE_NOT_FOUND_CODE_DESC),
             @ApiResponse(responseCode = EmpowerConstants.UNEXPECTED_SERVER_ERROR_CODE, description = EmpowerConstants.UNEXPECTED_SERVER_ERROR_CODE_DESC)
     })
-    public List<Vendors> getVendors(){
+    public List<Vendors> getVendors(@RequestParam(value = "projectId", required = false) Long projectId){
         return VendorsService.getVendors();
     }
 
 
-    @PostMapping(value = "/add",produces = {EmpowerConstants.APPLICATION_JSON, EmpowerConstants.TEXT_PLAIN})
+    @PostMapping(produces = {EmpowerConstants.APPLICATION_JSON, EmpowerConstants.TEXT_PLAIN})
     @Operation(summary = "Adds new Vendors .")
     @ApiResponses(value = {
             @ApiResponse(responseCode = EmpowerConstants.SUCCESS_CODE, description = EmpowerConstants.SUCCESS_CODE_DESC),
@@ -48,8 +48,7 @@ public class VendorsController {
             @ApiResponse(responseCode = EmpowerConstants.RESOURCE_NOT_FOUND_CODE, description = EmpowerConstants.RESOURCE_NOT_FOUND_CODE_DESC),
             @ApiResponse(responseCode = EmpowerConstants.UNEXPECTED_SERVER_ERROR_CODE, description = EmpowerConstants.UNEXPECTED_SERVER_ERROR_CODE_DESC)
     })
-    public Vendors addVendors(@RequestBody Vendors vendors) {
-
+    public Vendors addVendors(@RequestParam(value = "projectId", required = false) Long projectId, @RequestBody Vendors vendors) {
         return VendorsService.addVendors(vendors);
     }
 }
