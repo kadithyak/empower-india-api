@@ -47,4 +47,22 @@ public class Finance {
 
     @Column(name = "last_updated_by")
     private String lastUpdatedBy;
+
+    @Column(name = "paid_to")
+    private String paidTo;
+
+    @Column(name = "expense_type")
+    private String expenseType;
+
+    @Column(name = "description")
+    private String description;
+
+    @Column(name = "bill_proofs")
+    private String billProofs;
+
+    @Column(name = "spent_by")
+    private String spentBy;
+
+    @Column(name = "approved_by")
+    private String approvedBy;
 }
