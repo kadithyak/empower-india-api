@@ -61,6 +61,9 @@ jobs:
           tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_8AA7388FB74E41A99ED9465B9BFC41BF }}
           subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_16126FBA918242A5B5BA8977904F0D7A }}
 
+      - name: List built JAR files
+        run: ls -la build/libs/
+
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
