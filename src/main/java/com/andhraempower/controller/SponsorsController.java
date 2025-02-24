@@ -8,11 +8,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 @CrossOrigin
 @RestController
-@RequestMapping("/Sponsors")
+@RequestMapping("/")
 @RequiredArgsConstructor
 public class SponsorsController {
 
-    @GetMapping("/getSponsors")
+    @GetMapping("/")
     public String getSponsors(){
         return "This is Sponsors page";
     }
