@@ -30,7 +30,7 @@ public class CategoryLookup {
         joinColumns = @JoinColumn(name="category_id"),
         inverseJoinColumns = @JoinColumn(name="project_id")
     )
-    private List<ProjectLookup> projects;
+    private List<ProjectTypeLookup> projects;
 
     public Integer getId() {
         return id;
@@ -48,11 +48,11 @@ public class CategoryLookup {
         this.name = name;
     }
 
-    public List<ProjectLookup> getProjects() {
+    public List<ProjectTypeLookup> getProjects() {
         return projects;
     }
 
-    public void setProjects(List<ProjectLookup> projects) {
+    public void setProjects(List<ProjectTypeLookup> projects) {
         this.projects = projects;
     }
 }

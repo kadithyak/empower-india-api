@@ -3,11 +3,7 @@ package com.andhraempower.service;
 import com.andhraempower.constants.StatusEnum;
 import com.andhraempower.dto.ProjectRequestDto;
 import com.andhraempower.dto.ProjectResponseDto;
-import com.andhraempower.entity.VillageProject;
-import com.andhraempower.entity.VillageLookup;
-import com.andhraempower.entity.MandalLookup;
-import com.andhraempower.entity.DistrictLookup;
-import com.andhraempower.entity.CategoryLookup;
+import com.andhraempower.entity.*;
 import com.andhraempower.repository.ProjectRepository;
 import com.andhraempower.dao.LookupDAO;
 import lombok.AllArgsConstructor;
@@ -65,7 +61,6 @@ public class ProjectService {
         villageProject.setLocation(projectRequestDto.getLocation());
         villageProject.setLatitude(projectRequestDto.getLatitude());
         villageProject.setLongitude(projectRequestDto.getLongitude());
-        villageProject.setProjectType(projectRequestDto.getProjectType());
         villageProject.setIsNew("New".equalsIgnoreCase(projectRequestDto.getProjectNeed()));
         villageProject.setGovernmentShare(projectRequestDto.getGovernmentShare());
         villageProject.setProjectEstimation(projectRequestDto.getProjectEstimation());
@@ -86,6 +81,7 @@ public class ProjectService {
                 throw new IllegalArgumentException("Invalid Category Id : " + projectRequestDto.getProjectCategoryId());
             }
             villageProject.setProjectCategory(categoryLookup.get());
+            villageProject.setProjectTypeLookup(getProjectTypeLookup(projectRequestDto, categoryLookup));
         }
         return villageProject;
 
@@ -99,12 +95,13 @@ public class ProjectService {
         if(category.isEmpty()) {
             throw new IllegalArgumentException("Invalid Category Id : " + projectRequestDto.getProjectCategoryId());
         }
+        ProjectTypeLookup projectTypeLookup = getProjectTypeLookup(projectRequestDto, category);
         return VillageProject.builder()
                 .location(projectRequestDto.getLocation())
                 .latitude(projectRequestDto.getLatitude())
                 .longitude(projectRequestDto.getLongitude())
                 .projectCategory(category.get())
-                .projectType(projectRequestDto.getProjectType())
+                .projectTypeLookup(projectTypeLookup)
                 .isNew("New".equalsIgnoreCase(projectRequestDto.getProjectNeed()))
                 .projectEstimation(projectRequestDto.getProjectEstimation())
                 .governmentShare(projectRequestDto.getGovernmentShare())
@@ -115,5 +112,10 @@ public class ProjectService {
                 .createdBy("Admin")
                 .lastUpdatedBy("Admin")
                 .build();
+    }
+
+    private static ProjectTypeLookup getProjectTypeLookup(ProjectRequestDto projectRequestDto, Optional<CategoryLookup> category) {
+        return category.get().getProjects().stream().filter(projectType -> projectType.getId().equals(Long.parseLong(projectRequestDto.getProjectType())))
+                .findFirst().orElseThrow(() -> new IllegalArgumentException("Invalid Project Type Id : " + projectRequestDto.getProjectCategoryId()));
     }
 }
