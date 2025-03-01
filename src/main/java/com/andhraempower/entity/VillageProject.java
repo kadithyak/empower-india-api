@@ -20,8 +20,9 @@ public class VillageProject {
     @JoinColumn(name = "project_category_id", nullable = false)
     private CategoryLookup projectCategory;
 
-    @Column(name = "project_type", nullable = false)
-    private String projectType;
+    @ManyToOne
+    @JoinColumn(name = "project_type", nullable = false)
+    private ProjectTypeLookup projectTypeLookup;
 
     @Column(name = "location")
     private String location;

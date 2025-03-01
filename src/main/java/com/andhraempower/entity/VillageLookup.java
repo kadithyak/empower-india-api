@@ -21,6 +21,9 @@ public class VillageLookup {
 
     private Integer mandalId;
 
+    @Column(name = "pin_code")
+    private String pinCode;
+
     public Integer getId() {
         return id;
     }
@@ -53,6 +56,11 @@ public class VillageLookup {
         this.mandalId = mandalId;
     }
 
-    
+    public String getPinCode() {
+        return pinCode;
+    }
 
+    public void setPinCode(String pinCode) {
+        this.pinCode = pinCode;
+    }
 }

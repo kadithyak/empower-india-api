@@ -1,31 +1,26 @@
 package com.andhraempower.entity;
 
-import java.util.List;
-
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
 @Table(name="project_type_lookup")
-public class ProjectLookup {
+public class ProjectTypeLookup {
 
     @Id
     @Column(name="id")
-    private Integer id;
+    private Long id;
 
     @Column(name="description")
     private String description;
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

@@ -12,6 +12,7 @@ public class ProjectResponseDto {
     private String projectCategory;
     private Integer projectCategoryId;
     private String projectType;
+    private Long projectTypeId;
     private String status;
     private String location;
     private Double latitude;
@@ -29,4 +30,5 @@ public class ProjectResponseDto {
     private int mandalId;
     private String districtName;
     private int districtId;
+    private String pinCode;
 }
