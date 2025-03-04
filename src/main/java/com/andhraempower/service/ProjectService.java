@@ -8,6 +8,8 @@ import com.andhraempower.repository.ProjectRepository;
 import com.andhraempower.dao.LookupDAO;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -47,9 +49,9 @@ public class ProjectService {
         return lookupDAO.getVillageById(villageId);
     }
 
-    public List<ProjectResponseDto> getProjects() {
+    public Page<ProjectResponseDto> getProjects(Pageable pageable) {
         log.info("Fetching all projects details.");
-        return projectRepository.findAllProjects();
+        return projectRepository.findAllProjects(pageable);
     }
 
     public List<ProjectResponseDto> searchProjectsByDistrictMandalVillageCode(Long districtCode, Long mandalCode, Long villageCode) {

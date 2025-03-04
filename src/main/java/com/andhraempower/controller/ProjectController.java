@@ -10,6 +10,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -38,13 +42,16 @@ public class ProjectController {
             @ApiResponse(responseCode = EmpowerConstants.RESOURCE_NOT_FOUND_CODE, description = EmpowerConstants.RESOURCE_NOT_FOUND_CODE_DESC),
             @ApiResponse(responseCode = EmpowerConstants.UNEXPECTED_SERVER_ERROR_CODE, description = EmpowerConstants.UNEXPECTED_SERVER_ERROR_CODE_DESC)
     })
-    public ResponseEntity<List<ProjectResponseDto>> getProjects() {
+    public ResponseEntity<Page<ProjectResponseDto>> getProjects(
+            @RequestParam(name = "page", defaultValue = "0") int page,
+            @RequestParam(name = "size", defaultValue = "10") int size) {
         try {
-            List<ProjectResponseDto> projects = projectService.getProjects();
-            log.debug("Projects List {}", projects);
+            Pageable pageable = PageRequest.of(page, size, Sort.unsorted());
+            Page<ProjectResponseDto> projects = projectService.getProjects(pageable);
+            log.debug("Projects Page: {}", projects);
             return ResponseEntity.ok(projects);
         }catch (Exception e){
-            log.error("Exception while fetching the projects", e);
+            log.error("Error while fetching projects", e);
             return ResponseEntity.internalServerError().build();
         }
     }
