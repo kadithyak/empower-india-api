@@ -3,6 +3,7 @@ package com.andhraempower.service;
 import com.andhraempower.constants.StatusEnum;
 import com.andhraempower.dto.ProjectRequestDto;
 import com.andhraempower.dto.ProjectResponseDto;
+import com.andhraempower.dto.ProjectsCountDto;
 import com.andhraempower.entity.*;
 import com.andhraempower.repository.ProjectRepository;
 import com.andhraempower.dao.LookupDAO;
@@ -21,6 +22,7 @@ public class ProjectService {
 
     private final ProjectRepository projectRepository;
     private final LookupDAO lookupDAO;
+
 
     public void saveProject(ProjectRequestDto projectRequestDto) {
         log.info("Saving new project: {}", projectRequestDto);
@@ -117,5 +119,12 @@ public class ProjectService {
     private static ProjectTypeLookup getProjectTypeLookup(ProjectRequestDto projectRequestDto, Optional<CategoryLookup> category) {
         return category.get().getProjects().stream().filter(projectType -> projectType.getId().equals(Long.parseLong(projectRequestDto.getProjectType())))
                 .findFirst().orElseThrow(() -> new IllegalArgumentException("Invalid Project Type Id : " + projectRequestDto.getProjectCategoryId()));
+    }
+
+    public ProjectsCountDto getProjectsCount() {
+        long count= projectRepository.count();
+        ProjectsCountDto dto = new ProjectsCountDto();
+        dto.setCount(count);
+        return dto;
     }
 }

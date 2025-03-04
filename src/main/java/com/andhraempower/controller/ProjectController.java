@@ -3,6 +3,7 @@ package com.andhraempower.controller;
 import com.andhraempower.constants.EmpowerConstants;
 import com.andhraempower.dto.ProjectRequestDto;
 import com.andhraempower.dto.ProjectResponseDto;
+import com.andhraempower.dto.ProjectsCountDto;
 import com.andhraempower.service.ProjectService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -43,6 +44,26 @@ public class ProjectController {
             List<ProjectResponseDto> projects = projectService.getProjects();
             log.debug("Projects List {}", projects);
             return ResponseEntity.ok(projects);
+        }catch (Exception e){
+            log.error("Exception while fetching the projects", e);
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
+    @GetMapping(value = "/count",produces = {EmpowerConstants.APPLICATION_JSON, EmpowerConstants.TEXT_PLAIN})
+    @Operation(summary = "Retrieves count of all projects.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = EmpowerConstants.SUCCESS_CODE, description = EmpowerConstants.SUCCESS_CODE_DESC),
+            @ApiResponse(responseCode = EmpowerConstants.BAD_REQUEST_CODE, description = EmpowerConstants.BAD_REQUEST_CODE_DESC),
+            @ApiResponse(responseCode = EmpowerConstants.UNAUTHORIZED_CODE, description = EmpowerConstants.UNAUTHORIZED_CODE_DESC),
+            @ApiResponse(responseCode = EmpowerConstants.FORBIDDEN_CODE, description = EmpowerConstants.FORBIDDEN_CODE_DESC),
+            @ApiResponse(responseCode = EmpowerConstants.RESOURCE_NOT_FOUND_CODE, description = EmpowerConstants.RESOURCE_NOT_FOUND_CODE_DESC),
+            @ApiResponse(responseCode = EmpowerConstants.UNEXPECTED_SERVER_ERROR_CODE, description = EmpowerConstants.UNEXPECTED_SERVER_ERROR_CODE_DESC)
+    })
+    public ResponseEntity<ProjectsCountDto> getProjectsCount() {
+        try {
+            ProjectsCountDto dto = projectService.getProjectsCount();
+            return ResponseEntity.ok(dto);
         }catch (Exception e){
             log.error("Exception while fetching the projects", e);
             return ResponseEntity.internalServerError().build();
