@@ -4,6 +4,7 @@ import com.andhraempower.constants.EmpowerConstants;
 import com.andhraempower.dto.ProjectRequestDto;
 import com.andhraempower.dto.ProjectResponseDto;
 import com.andhraempower.dto.ProjectsCountDto;
+import com.andhraempower.entity.ProjectStatusLookup;
 import com.andhraempower.service.ProjectService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -76,7 +77,7 @@ public class ProjectController {
             return ResponseEntity.internalServerError().build();
         }
     }
-
+    
     @PostMapping(consumes = EmpowerConstants.APPLICATION_JSON, produces = EmpowerConstants.TEXT_PLAIN)
     @Operation(summary = "Saves a new project to the database.")
     @ApiResponses(value = {
@@ -145,7 +146,53 @@ public class ProjectController {
             log.error("Error while searching projects", e);
             return ResponseEntity.internalServerError().build();
         }
+
+
+    }
+    @GetMapping(value="/type", produces = {EmpowerConstants.APPLICATION_JSON, EmpowerConstants.TEXT_PLAIN})
+    @Operation(summary = "Retrieves a list of all projects.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = EmpowerConstants.SUCCESS_CODE, description = EmpowerConstants.SUCCESS_CODE_DESC),
+            @ApiResponse(responseCode = EmpowerConstants.BAD_REQUEST_CODE, description = EmpowerConstants.BAD_REQUEST_CODE_DESC),
+            @ApiResponse(responseCode = EmpowerConstants.UNAUTHORIZED_CODE, description = EmpowerConstants.UNAUTHORIZED_CODE_DESC),
+            @ApiResponse(responseCode = EmpowerConstants.FORBIDDEN_CODE, description = EmpowerConstants.FORBIDDEN_CODE_DESC),
+            @ApiResponse(responseCode = EmpowerConstants.RESOURCE_NOT_FOUND_CODE, description = EmpowerConstants.RESOURCE_NOT_FOUND_CODE_DESC),
+            @ApiResponse(responseCode = EmpowerConstants.UNEXPECTED_SERVER_ERROR_CODE, description = EmpowerConstants.UNEXPECTED_SERVER_ERROR_CODE_DESC)
+    })
+    public ResponseEntity<Page<ProjectResponseDto>> getProjectsByType(@RequestParam("typeId") Long projectTypeId,
+                                                                      @RequestParam(name = "page", defaultValue = "0") int page,
+                                                                     @RequestParam(name = "size", defaultValue = "10") int size) {
+        try
+        {
+            Pageable pageable = PageRequest.of(page, size, Sort.unsorted());
+            Page<ProjectResponseDto> projects = projectService.getProjectsByProjectType(projectTypeId,pageable);
+            return ResponseEntity.ok(projects);
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().build();
+        }
     }
 
+    @GetMapping(value="/status", produces = {EmpowerConstants.APPLICATION_JSON, EmpowerConstants.TEXT_PLAIN})
+    @Operation(summary = "Retrieves a list of all projects filtered by status.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = EmpowerConstants.SUCCESS_CODE, description = EmpowerConstants.SUCCESS_CODE_DESC),
+            @ApiResponse(responseCode = EmpowerConstants.BAD_REQUEST_CODE, description = EmpowerConstants.BAD_REQUEST_CODE_DESC),
+            @ApiResponse(responseCode = EmpowerConstants.UNAUTHORIZED_CODE, description = EmpowerConstants.UNAUTHORIZED_CODE_DESC),
+            @ApiResponse(responseCode = EmpowerConstants.FORBIDDEN_CODE, description = EmpowerConstants.FORBIDDEN_CODE_DESC),
+            @ApiResponse(responseCode = EmpowerConstants.RESOURCE_NOT_FOUND_CODE, description = EmpowerConstants.RESOURCE_NOT_FOUND_CODE_DESC),
+            @ApiResponse(responseCode = EmpowerConstants.UNEXPECTED_SERVER_ERROR_CODE, description = EmpowerConstants.UNEXPECTED_SERVER_ERROR_CODE_DESC)
+    })
+    public ResponseEntity<Page<ProjectResponseDto>> getProjectsByStatus(@RequestParam("status") String status,
+                                                                        @RequestParam(name = "page", defaultValue = "0") int page,
+                                                                       @RequestParam(name = "size", defaultValue = "10") int size)  {
+        try
+            {
+                Pageable pageable = PageRequest.of(page, size, Sort.unsorted());
+                Page<ProjectResponseDto> projects = projectService.getProjectsByProjectStatus(status, pageable);
+                return ResponseEntity.ok(projects);
+            } catch (Exception e) {
+            return ResponseEntity.internalServerError().build();
+        }
+    }
 
 }

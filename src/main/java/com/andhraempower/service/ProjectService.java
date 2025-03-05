@@ -129,4 +129,12 @@ public class ProjectService {
         dto.setCount(count);
         return dto;
     }
+
+    public Page<ProjectResponseDto> getProjectsByProjectType(Long projectTypeId, Pageable pageable) {
+        return projectRepository.findByProjectTypeLookupId(projectTypeId, pageable);
+    }
+
+    public Page<ProjectResponseDto> getProjectsByProjectStatus(String status, Pageable pageable) {
+        return projectRepository.findByStatus(status, pageable);
+    }
 }
