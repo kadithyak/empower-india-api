@@ -3,15 +3,20 @@ package com.andhraempower.controller;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.*;
 
+import com.andhraempower.constants.EmpowerConstants;
+import com.andhraempower.dto.ProjectCategoriesDto;
 import com.andhraempower.entity.CategoryLookup;
 import com.andhraempower.entity.DistrictLookup;
 import com.andhraempower.entity.MandalLookup;
 import com.andhraempower.entity.StateLookup;
 import com.andhraempower.entity.VillageLookup;
 import com.andhraempower.service.LookupService;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
 @CrossOrigin
 @RestController
@@ -56,6 +61,20 @@ public class LookupController {
     @GetMapping("/project-categories")
     public ResponseEntity<List<CategoryLookup>> getCategories() {
         return ResponseEntity.ok().body(lookupService.getCategories());
+    }
+
+    @GetMapping(value = "/projects/categories",produces = {EmpowerConstants.APPLICATION_JSON})
+    @Operation(summary = "List of Categories in VillageProject")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = EmpowerConstants.SUCCESS_CODE, description = EmpowerConstants.SUCCESS_CODE_DESC),
+            @ApiResponse(responseCode = EmpowerConstants.BAD_REQUEST_CODE, description = EmpowerConstants.BAD_REQUEST_CODE_DESC),
+            @ApiResponse(responseCode = EmpowerConstants.UNAUTHORIZED_CODE, description = EmpowerConstants.UNAUTHORIZED_CODE_DESC),
+            @ApiResponse(responseCode = EmpowerConstants.FORBIDDEN_CODE, description = EmpowerConstants.FORBIDDEN_CODE_DESC),
+            @ApiResponse(responseCode = EmpowerConstants.RESOURCE_NOT_FOUND_CODE, description = EmpowerConstants.RESOURCE_NOT_FOUND_CODE_DESC),
+            @ApiResponse(responseCode = EmpowerConstants.UNEXPECTED_SERVER_ERROR_CODE, description = EmpowerConstants.UNEXPECTED_SERVER_ERROR_CODE_DESC)
+    })
+    public ResponseEntity<List<ProjectCategoriesDto>> getCategoriesByProjects() {
+        return ResponseEntity.ok().body(lookupService.getCategoriesByProjects());
     }
 }
 
