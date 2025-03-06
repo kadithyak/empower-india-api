@@ -2,16 +2,12 @@ package com.andhraempower.controller;
 
 import java.util.List;
 
+import com.andhraempower.entity.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.andhraempower.constants.EmpowerConstants;
 import com.andhraempower.dto.ProjectCategoriesDto;
-import com.andhraempower.entity.CategoryLookup;
-import com.andhraempower.entity.DistrictLookup;
-import com.andhraempower.entity.MandalLookup;
-import com.andhraempower.entity.StateLookup;
-import com.andhraempower.entity.VillageLookup;
 import com.andhraempower.service.LookupService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -75,6 +71,11 @@ public class LookupController {
     })
     public ResponseEntity<List<ProjectCategoriesDto>> getCategoriesByProjects() {
         return ResponseEntity.ok().body(lookupService.getCategoriesByProjects());
+    }
+
+    @GetMapping("/project-types")
+    public ResponseEntity<List<ProjectTypeLookup>> getProjectTypes() {
+        return ResponseEntity.ok().body(lookupService.getPrjectTypes());
     }
 }
 

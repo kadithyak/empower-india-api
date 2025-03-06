@@ -3,11 +3,7 @@ package com.andhraempower.service;
 import java.util.List;
 
 import com.andhraempower.dto.ProjectCategoriesDto;
-import com.andhraempower.entity.CategoryLookup;
-import com.andhraempower.entity.DistrictLookup;
-import com.andhraempower.entity.MandalLookup;
-import com.andhraempower.entity.StateLookup;
-import com.andhraempower.entity.VillageLookup;
+import com.andhraempower.entity.*;
 
 public interface LookupService {
 
@@ -22,4 +18,6 @@ public interface LookupService {
     List<CategoryLookup> getCategories();
 
     List<ProjectCategoriesDto> getCategoriesByProjects();
+
+    List<ProjectTypeLookup> getPrjectTypes();
 }

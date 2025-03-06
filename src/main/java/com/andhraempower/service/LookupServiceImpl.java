@@ -2,15 +2,11 @@ package com.andhraempower.service;
 
 import java.util.List;
 
+import com.andhraempower.entity.*;
 import org.springframework.stereotype.Service;
 
 import com.andhraempower.dao.LookupDAO;
 import com.andhraempower.dto.ProjectCategoriesDto;
-import com.andhraempower.entity.CategoryLookup;
-import com.andhraempower.entity.DistrictLookup;
-import com.andhraempower.entity.MandalLookup;
-import com.andhraempower.entity.StateLookup;
-import com.andhraempower.entity.VillageLookup;
 import com.andhraempower.repository.ProjectCategoryRepository;
 
 
@@ -54,6 +50,11 @@ public class LookupServiceImpl implements LookupService {
     public List<ProjectCategoriesDto> getCategoriesByProjects() {
         return this.projectCategoryRepository.getCategoriesByProjects();   
     }
-    
-    
+
+    @Override
+    public List<ProjectTypeLookup> getPrjectTypes() {
+        return this.lookupDAO.getProjectTypes();
+    }
+
+
 }
