@@ -1,14 +1,17 @@
 package com.andhraempower.service;
 
+import com.andhraempower.dto.DonarDto;
 import com.andhraempower.entity.CommitteeMembers;
 import com.andhraempower.entity.Donar;
 import com.andhraempower.entity.VillageProjectCommitteeMembers;
 import com.andhraempower.entity.VillageProjectDonar;
+import com.andhraempower.repository.DonarInfoRepository;
 import com.andhraempower.repository.DonarsRepository;
 import com.andhraempower.repository.VillageProjectDonarRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,6 +19,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import org.springframework.data.domain.Pageable;
 
 import static com.andhraempower.constants.EmpowerConstants.USER_ADMIN;
 
@@ -26,6 +31,9 @@ public class DonarsService {
 
     @Autowired
     private DonarsRepository donarsRepository;
+    
+    @Autowired
+    private DonarInfoRepository donarInfoRepository;
 
     private VillageProjectDonarRepository villageProjectDonarRepository;
 
@@ -57,5 +65,11 @@ public class DonarsService {
     @Transactional
     public void removeCommitteeMemberFromProject(Long committeeId, Long projectId){
         villageProjectDonarRepository.deleteByIdAndVillageProjectId(committeeId, projectId);
+    }
+
+    public List<DonarDto> getTopDonars(Integer topN) {
+        int pageSize = (int) topN;  // Convert long to int safely
+        Pageable pageable = PageRequest.of(0, pageSize); 
+        return donarInfoRepository.findTopDonars(pageable);
     }
 }

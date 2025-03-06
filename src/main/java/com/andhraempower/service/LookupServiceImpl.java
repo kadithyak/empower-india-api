@@ -5,20 +5,24 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.andhraempower.dao.LookupDAO;
+import com.andhraempower.dto.ProjectCategoriesDto;
 import com.andhraempower.entity.CategoryLookup;
 import com.andhraempower.entity.DistrictLookup;
 import com.andhraempower.entity.MandalLookup;
 import com.andhraempower.entity.StateLookup;
 import com.andhraempower.entity.VillageLookup;
+import com.andhraempower.repository.ProjectCategoryRepository;
 
 
 @Service
 public class LookupServiceImpl implements LookupService {
 
+    private ProjectCategoryRepository projectCategoryRepository;
     private LookupDAO lookupDAO;
 
-    public LookupServiceImpl(LookupDAO lookupDAO) {
+    public LookupServiceImpl(LookupDAO lookupDAO, ProjectCategoryRepository projectCategoryRepository) {
         this.lookupDAO = lookupDAO;
+        this.projectCategoryRepository = projectCategoryRepository;
     }
 
     @Override
@@ -44,6 +48,11 @@ public class LookupServiceImpl implements LookupService {
     @Override
     public List<CategoryLookup> getCategories() {
         return this.lookupDAO.getCategories();   
+    }
+
+    @Override
+    public List<ProjectCategoriesDto> getCategoriesByProjects() {
+        return this.projectCategoryRepository.getCategoriesByProjects();   
     }
     
     

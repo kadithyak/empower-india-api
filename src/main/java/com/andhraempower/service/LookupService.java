@@ -2,6 +2,7 @@ package com.andhraempower.service;
 
 import java.util.List;
 
+import com.andhraempower.dto.ProjectCategoriesDto;
 import com.andhraempower.entity.CategoryLookup;
 import com.andhraempower.entity.DistrictLookup;
 import com.andhraempower.entity.MandalLookup;
@@ -19,4 +20,6 @@ public interface LookupService {
     List<VillageLookup> getVillagesByMandal(Integer mandalId);
 
     List<CategoryLookup> getCategories();
+
+    List<ProjectCategoriesDto> getCategoriesByProjects();
 }
