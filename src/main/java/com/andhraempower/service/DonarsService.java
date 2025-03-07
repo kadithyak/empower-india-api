@@ -70,6 +70,7 @@ public class DonarsService {
     public List<DonarDto> getTopDonars(Integer topN) {
         int pageSize = (int) topN;  // Convert long to int safely
         Pageable pageable = PageRequest.of(0, pageSize); 
-        return donarInfoRepository.findTopDonars(pageable);
+        //return donarInfoRepository.findTopDonars(pageable);
+        return null;
     }
 }

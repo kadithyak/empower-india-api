@@ -13,7 +13,7 @@ import org.springframework.data.domain.Pageable;
 @Repository
 public interface DonarInfoRepository extends JpaRepository<Donar, Integer> {
 
-  @Query("SELECT new com.andhraempower.dto.DonarDto( " +
+  /*@Query("SELECT new com.andhraempower.dto.DonarDto( " +
   " d.firstName, d.lastName, d.phoneNumber, d.email, SUM(d.amount), " +
   " (SELECT sc.categoryName FROM SponsorCategory sc " +
   "  WHERE SUM(d.amount) >= sc.minAmount " +
@@ -25,5 +25,5 @@ public interface DonarInfoRepository extends JpaRepository<Donar, Integer> {
   "FROM Donar d " +
   "GROUP BY d.firstName, d.lastName, d.phoneNumber, d.email " +
   "ORDER BY SUM(d.amount) DESC")
-  List<DonarDto> findTopDonars(Pageable pageable);
+  List<DonarDto> findTopDonars(Pageable pageable);*/
 }

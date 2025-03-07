@@ -38,9 +38,9 @@ public class Donar extends Audit {
     @Column(name = "memory_of")
     private String memoryOf;
 
-    @Column(name = "amount")
-    private Double amount;
+    @ManyToOne
+    @JoinColumn(name = "village_id")
+    private VillageLookup village;
 
-    @Column(name = "mode_of_payment")
-    private String modeOfPayment;
+
 }

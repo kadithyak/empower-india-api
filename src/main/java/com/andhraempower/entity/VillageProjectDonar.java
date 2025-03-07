@@ -21,6 +21,12 @@ public class VillageProjectDonar extends Audit {
     @Column(name = "village_project_id")
     private Long villageProjectId;
 
+    @Column(name = "amount")
+    private Double amount;
+
+    @Column(name = "mode_of_payment")
+    private String modeOfPayment;
+
     @OneToOne
     @JoinColumn(name = "donar_id")
     private Donar donar;
