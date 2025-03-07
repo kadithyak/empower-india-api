@@ -31,13 +31,20 @@ public class ProjectService {
         Optional<VillageLookup> village = getVillageLookup(projectRequestDto.getVillageId());
         Optional<CategoryLookup> category = getCategoryLookup(projectRequestDto.getProjectCategoryId());
         VillageProject project = getVillageProject(projectRequestDto, category, village);
-        project.setStatusCode(StatusEnum.NEW.name());
+        if( projectRequestDto.getProjectEstimation() > 0) {
+            project.setStatusCode(StatusEnum.WFD.name());
+        } else {
+            project.setStatusCode(StatusEnum.NEW.name());
+        }
         projectRepository.save(project);
         log.info("New Project saved successfully!");
     }
     public void updateProject(ProjectRequestDto projectRequestDto) {
         projectRepository.findById(projectRequestDto.getId())
                 .ifPresentOrElse(project -> {
+                    if(project.getStatusCode().equalsIgnoreCase(StatusEnum.NEW.name()) && projectRequestDto.getProjectEstimation() > 0){
+                        project.setStatusCode(StatusEnum.WFD.name());
+                    }
                     projectRepository.save(getUpdatedProject(project, projectRequestDto));
                     log.info("New Project Updated successfully!");
                 }, () -> {throw new IllegalArgumentException("Project Not found for the given Id : " + projectRequestDto.getId());});
@@ -53,7 +60,11 @@ public class ProjectService {
 
     public Page<ProjectResponseDto> getProjects(Pageable pageable) {
         log.info("Fetching all projects details.");
-        return projectRepository.findAllProjects(pageable);
+        Page<ProjectResponseDto> allProjects = projectRepository.findAllProjects(pageable);
+        allProjects.stream().forEach(projectResponseDto -> {
+            projectResponseDto.setStatus(StatusEnum.valueOf(projectResponseDto.getStatus()).getStatusDescription());
+        });
+        return allProjects;
     }
 
     public List<ProjectResponseDto> searchProjectsByDistrictMandalVillageCode(Long districtCode, Long mandalCode, Long villageCode) {

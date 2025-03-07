@@ -25,6 +25,7 @@ public class DonarDto {
     private Integer districtId;
     private String districtName;
     private String memoryOf;
+    private String modeOfPayment;
 
     public DonarDto(String firstName, String lastName, String phoneNumber, String email, String address,  Double amount, String category) {
         this.firstName = firstName;

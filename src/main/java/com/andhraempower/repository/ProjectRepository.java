@@ -17,7 +17,7 @@ public interface ProjectRepository extends JpaRepository<VillageProject, Long> {
 
     @Query("SELECT new com.andhraempower.dto.ProjectResponseDto( " +
             "vp.id, vp.projectCategory.name,vp.projectCategory.id, vp.projectTypeLookup.description,vp.projectTypeLookup.id," +
-            " vp.status, vp.location, " +
+            " vp.statusCode, vp.location, " +
             "vp.latitude, vp.longitude, vp.projectEstimation, vp.governmentShare, vp.publicShare, " +
             "vp.isNew, vp.description, vp.createdBy, vp.lastUpdatedBy, " +
             "vl.name,vl.id, ml.name,ml.id, dl.name,dl.id, vl.pinCode) " +
