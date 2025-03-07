@@ -36,11 +36,11 @@ public class DonarsController {
             @ApiResponse(responseCode = EmpowerConstants.RESOURCE_NOT_FOUND_CODE, description = EmpowerConstants.RESOURCE_NOT_FOUND_CODE_DESC),
             @ApiResponse(responseCode = EmpowerConstants.UNEXPECTED_SERVER_ERROR_CODE, description = EmpowerConstants.UNEXPECTED_SERVER_ERROR_CODE_DESC)
     })
-    public ResponseEntity<Donar> addDonars(@RequestParam(value = "projectId",required = false) Long projectId, @RequestBody Donar donars) {
+    public ResponseEntity<Donar> addDonars(@RequestParam(value = "projectId",required = false) Long projectId, @RequestBody DonarDto donars) {
         log.debug("Adding Donar {} and project Id {}", donars, projectId);
         try {
             final Donar donar = donarsService.addDonars(donars);
-            Optional.ofNullable(projectId).ifPresent(id -> donarsService.associateDonarToProject(id, donar));
+            Optional.ofNullable(projectId).ifPresent(id -> donarsService.associateDonarToProject(id, donar, donars.getAmount(), donars.getModeOfPayment()));
             return ResponseEntity.ok(donar);
         }catch (Exception e){
             log.error("Exception while adding committee member", e);
@@ -72,13 +72,13 @@ public class DonarsController {
             @ApiResponse(responseCode = EmpowerConstants.RESOURCE_NOT_FOUND_CODE, description = EmpowerConstants.RESOURCE_NOT_FOUND_CODE_DESC),
             @ApiResponse(responseCode = EmpowerConstants.UNEXPECTED_SERVER_ERROR_CODE, description = EmpowerConstants.UNEXPECTED_SERVER_ERROR_CODE_DESC)
     })
-    public ResponseEntity<Donar> updateDonars(@RequestBody Donar donar) {
-        log.debug("Adding donar {} ", donar);
+    public ResponseEntity<Donar> updateDonars(@RequestBody DonarDto donarDto) {
+        log.debug("Adding donar {} ", donarDto);
         try {
-            if(donar.getId() == null ){
+            if(donarDto.getId() == null ){
                 return ResponseEntity.badRequest().build();
             }
-            Donar donarResponse = donarsService.addDonars(donar);
+            Donar donarResponse = donarsService.addDonars(donarDto);
             return ResponseEntity.ok().body(donarResponse);
         }catch (Exception e){
             log.error("Exception while adding donar", e);
