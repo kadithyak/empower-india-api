@@ -45,9 +45,12 @@ public interface DonarsRepository extends JpaRepository<Donar, Integer> {
   List<DonarDto> findAllDonars();
 
   @Query("SELECT new com.andhraempower.dto.DonarDto( " +
-    "d.firstName, d.lastName, d.phoneNumber, d.email, d.address, vpl.amount) "+ 
+    "d.id, d.firstName, d.lastName, d.phoneNumber, d.email, d.address, vl.id, vl.name, ml.id, ml.name, dl.id, dl.name, d.memoryOf, vpl.amount) "+ 
     "FROM VillageProjectDonar vpl " +
     "JOIN Donar d ON vpl.donar.id = d.id " +
+    "LEFT JOIN VillageLookup vl ON d.village.id = vl.id " +
+    "LEFT JOIN MandalLookup ml ON vl.mandalId = ml.id " +
+    "LEFT JOIN DistrictLookup dl ON ml.districtId = dl.id "+
     "WHERE (:firstName IS NULL OR d.firstName = :firstName) " +
     "AND (:lastName IS NULL OR d.lastName = :lastName) " +
     "AND (:phoneNumber IS NULL OR d.phoneNumber = :phoneNumber) " +
