@@ -118,4 +118,34 @@ public class DonarsController {
     public ResponseEntity<List<DonarDto>> getTopDonars(@PathVariable("topN") Integer topN) {
         return ResponseEntity.ok().body(donarsService.getTopDonars(topN));
     }
+
+    @GetMapping(value = "/project/all-donars",produces = {EmpowerConstants.APPLICATION_JSON})
+    @Operation(summary = "Fetch all Donars")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = EmpowerConstants.SUCCESS_CODE, description = EmpowerConstants.SUCCESS_CODE_DESC),
+            @ApiResponse(responseCode = EmpowerConstants.BAD_REQUEST_CODE, description = EmpowerConstants.BAD_REQUEST_CODE_DESC),
+            @ApiResponse(responseCode = EmpowerConstants.UNAUTHORIZED_CODE, description = EmpowerConstants.UNAUTHORIZED_CODE_DESC),
+            @ApiResponse(responseCode = EmpowerConstants.FORBIDDEN_CODE, description = EmpowerConstants.FORBIDDEN_CODE_DESC),
+            @ApiResponse(responseCode = EmpowerConstants.RESOURCE_NOT_FOUND_CODE, description = EmpowerConstants.RESOURCE_NOT_FOUND_CODE_DESC),
+            @ApiResponse(responseCode = EmpowerConstants.UNEXPECTED_SERVER_ERROR_CODE, description = EmpowerConstants.UNEXPECTED_SERVER_ERROR_CODE_DESC)
+    })
+    public ResponseEntity<List<DonarDto>> getAllDonars() {
+        return ResponseEntity.ok().body(donarsService.getAllDonars());
+    }
+
+    // Fetch Donar by firstName, lastName, phoneNumber, email, address
+    @PostMapping(value = "/project/donar",produces = {EmpowerConstants.APPLICATION_JSON})
+    @Operation(summary = "Fetch Donar by firstName, lastName, phoneNumber, email, address")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = EmpowerConstants.SUCCESS_CODE, description = EmpowerConstants.SUCCESS_CODE_DESC),
+            @ApiResponse(responseCode = EmpowerConstants.BAD_REQUEST_CODE, description = EmpowerConstants.BAD_REQUEST_CODE_DESC),
+            @ApiResponse(responseCode = EmpowerConstants.UNAUTHORIZED_CODE, description = EmpowerConstants.UNAUTHORIZED_CODE_DESC),
+            @ApiResponse(responseCode = EmpowerConstants.FORBIDDEN_CODE, description = EmpowerConstants.FORBIDDEN_CODE_DESC),
+            @ApiResponse(responseCode = EmpowerConstants.RESOURCE_NOT_FOUND_CODE, description = EmpowerConstants.RESOURCE_NOT_FOUND_CODE_DESC),
+            @ApiResponse(responseCode = EmpowerConstants.UNEXPECTED_SERVER_ERROR_CODE, description = EmpowerConstants.UNEXPECTED_SERVER_ERROR_CODE_DESC)
+    })
+    public ResponseEntity<List<DonarDto>> getDonar(@RequestBody Donar donar) {
+        return ResponseEntity.ok().body(donarsService.getDonar(donar));
+    }
+
 }
