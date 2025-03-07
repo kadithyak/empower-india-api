@@ -1,8 +1,10 @@
 package com.andhraempower.service;
 
+import com.andhraempower.dao.LookupDAO;
 import com.andhraempower.dto.DonarDto;
 import com.andhraempower.entity.Donar;
 import com.andhraempower.entity.VillageProjectDonar;
+import com.andhraempower.entity.*;
 import com.andhraempower.repository.DonarsRepository;
 import com.andhraempower.repository.VillageProjectDonarRepository;
 import lombok.AllArgsConstructor;
@@ -29,17 +31,27 @@ public class DonarsService {
     @Autowired
     private DonarsRepository donarsRepository;
     
+    @Autowired
+    private LookupDAO lookupDAO;
+
     private VillageProjectDonarRepository villageProjectDonarRepository;
 
-    public Donar addDonars(Donar donars) {
-        return donarsRepository.save(donars);
+    public Donar addDonars(DonarDto donars) {
+        Donar donar = donars.fromDto();
+        if(donars.getVillageId() != null && donars.getVillageId() > 0 ) {
+            Optional<VillageLookup> villageById = lookupDAO.getVillageById(donars.getVillageId().intValue());
+            villageById.ifPresent(donar::setVillage);
+        }
+        return donarsRepository.save(donar);
     }
 
-    public void associateDonarToProject(Long projectId, Donar donar){
+    public void associateDonarToProject(Long projectId, Donar donar, Double amount, String modeOfPayment){
         Optional.ofNullable(projectId).ifPresent(id -> {
             VillageProjectDonar villageProjectDonar = new VillageProjectDonar();
             villageProjectDonar.setDonar(donar);
             villageProjectDonar.setVillageProjectId(projectId);
+            villageProjectDonar.setAmount(amount);
+            villageProjectDonar.setModeOfPayment(modeOfPayment);
             villageProjectDonar.setCreatedBy(USER_ADMIN);
             villageProjectDonarRepository.save(villageProjectDonar);
         });

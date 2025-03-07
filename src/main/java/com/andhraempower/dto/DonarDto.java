@@ -1,4 +1,5 @@
 package com.andhraempower.dto;
+import com.andhraempower.entity.Donar;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,7 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class DonarDto {
 
-    private Integer id;
+    private Long id;
     private String firstName;
     private String lastName;
     private String phoneNumber;
@@ -35,7 +36,7 @@ public class DonarDto {
 
     }
 
-    public DonarDto(Integer id, String firstName, String lastName, String phoneNumber, String email, String address,
+    public DonarDto(Long id, String firstName, String lastName, String phoneNumber, String email, String address,
     Integer villageId, String villageName,
     Integer mandalId, String mandalName,
     Integer districtId, String districtName, String memoryOf, Double amount) {
@@ -56,6 +57,17 @@ public class DonarDto {
        
     }
 
- }
+    public Donar fromDto(){
+        Donar donar = new Donar();
+        donar.setId(this.id);
+        donar.setFirstName(this.firstName);
+        donar.setLastName(this.lastName);
+        donar.setPhoneNumber(this.phoneNumber);
+        donar.setEmail(this.email);
+        donar.setAddress(this.address);
+        donar.setMemoryOf(this.memoryOf);
+        return donar;
+    }
+}
 
 
