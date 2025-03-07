@@ -2,8 +2,9 @@ package com.andhraempower.service;
 
 import com.andhraempower.dao.LookupDAO;
 import com.andhraempower.dto.DonarDto;
+import com.andhraempower.entity.Donar;
+import com.andhraempower.entity.VillageProjectDonar;
 import com.andhraempower.entity.*;
-import com.andhraempower.repository.DonarInfoRepository;
 import com.andhraempower.repository.DonarsRepository;
 import com.andhraempower.repository.VillageProjectDonarRepository;
 import lombok.AllArgsConstructor;
@@ -30,9 +31,6 @@ public class DonarsService {
     @Autowired
     private DonarsRepository donarsRepository;
     
-    @Autowired
-    private DonarInfoRepository donarInfoRepository;
-
     @Autowired
     private LookupDAO lookupDAO;
 
@@ -78,7 +76,14 @@ public class DonarsService {
     public List<DonarDto> getTopDonars(Integer topN) {
         int pageSize = (int) topN;  // Convert long to int safely
         Pageable pageable = PageRequest.of(0, pageSize); 
-        //return donarInfoRepository.findTopDonars(pageable);
-        return null;
+        return donarsRepository.findTopDonars(pageable);
+    }
+
+    public List<DonarDto> getAllDonars() {
+        return donarsRepository.findAllDonars();
+    }
+
+    public List<DonarDto> getDonar(Donar donar) {
+        return donarsRepository.findDonar(donar.getFirstName(), donar.getLastName(), donar.getPhoneNumber(), donar.getEmail(), donar.getAddress());
     }
 }
