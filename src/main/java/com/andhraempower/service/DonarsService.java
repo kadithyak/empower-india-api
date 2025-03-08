@@ -1,14 +1,16 @@
 package com.andhraempower.service;
 
-import com.andhraempower.entity.CommitteeMembers;
+import com.andhraempower.dao.LookupDAO;
+import com.andhraempower.dto.DonarDto;
 import com.andhraempower.entity.Donar;
-import com.andhraempower.entity.VillageProjectCommitteeMembers;
 import com.andhraempower.entity.VillageProjectDonar;
+import com.andhraempower.entity.*;
 import com.andhraempower.repository.DonarsRepository;
 import com.andhraempower.repository.VillageProjectDonarRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,6 +18,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import org.springframework.data.domain.Pageable;
 
 import static com.andhraempower.constants.EmpowerConstants.USER_ADMIN;
 
@@ -26,18 +30,28 @@ public class DonarsService {
 
     @Autowired
     private DonarsRepository donarsRepository;
+    
+    @Autowired
+    private LookupDAO lookupDAO;
 
     private VillageProjectDonarRepository villageProjectDonarRepository;
 
-    public Donar addDonars(Donar donars) {
-        return donarsRepository.save(donars);
+    public Donar addDonars(DonarDto donars) {
+        Donar donar = donars.fromDto();
+        if(donars.getVillageId() != null && donars.getVillageId() > 0 ) {
+            Optional<VillageLookup> villageById = lookupDAO.getVillageById(donars.getVillageId().intValue());
+            villageById.ifPresent(donar::setVillage);
+        }
+        return donarsRepository.save(donar);
     }
 
-    public void associateDonarToProject(Long projectId, Donar donar){
+    public void associateDonarToProject(Long projectId, Donar donar, Double amount, String modeOfPayment){
         Optional.ofNullable(projectId).ifPresent(id -> {
             VillageProjectDonar villageProjectDonar = new VillageProjectDonar();
             villageProjectDonar.setDonar(donar);
             villageProjectDonar.setVillageProjectId(projectId);
+            villageProjectDonar.setAmount(amount);
+            villageProjectDonar.setModeOfPayment(modeOfPayment);
             villageProjectDonar.setCreatedBy(USER_ADMIN);
             villageProjectDonarRepository.save(villageProjectDonar);
         });
@@ -57,5 +71,19 @@ public class DonarsService {
     @Transactional
     public void removeCommitteeMemberFromProject(Long committeeId, Long projectId){
         villageProjectDonarRepository.deleteByIdAndVillageProjectId(committeeId, projectId);
+    }
+
+    public List<DonarDto> getTopDonars(Integer topN) {
+        int pageSize = (int) topN;  // Convert long to int safely
+        Pageable pageable = PageRequest.of(0, pageSize); 
+        return donarsRepository.findTopDonars(pageable);
+    }
+
+    public List<DonarDto> getAllDonars() {
+        return donarsRepository.findAllDonars();
+    }
+
+    public List<DonarDto> getDonar(Donar donar) {
+        return donarsRepository.findDonar(donar.getFirstName(), donar.getLastName(), donar.getPhoneNumber(), donar.getEmail(), donar.getAddress());
     }
 }

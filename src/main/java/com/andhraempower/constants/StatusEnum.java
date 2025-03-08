@@ -1,7 +1,7 @@
 package com.andhraempower.constants;
 
 public enum StatusEnum {
-    NEW("NEW"),APPROVED("APPROVED"),REJECTED("REJECTED"),WIP("WORK IN PROGRESS"),WFD("WAITING FOR DONOR"),COMPLETED("COMPLETED");
+    NEW("New"),APPROVED("Approved"),REJECTED("Rejected"),WIP("Work in progress"),WFD("Waiting for Donars"),COMPLETED("Completed");
 
     private final String statusDescription;
 

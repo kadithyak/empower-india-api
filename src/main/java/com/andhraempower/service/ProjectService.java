@@ -3,11 +3,14 @@ package com.andhraempower.service;
 import com.andhraempower.constants.StatusEnum;
 import com.andhraempower.dto.ProjectRequestDto;
 import com.andhraempower.dto.ProjectResponseDto;
+import com.andhraempower.dto.ProjectsCountDto;
 import com.andhraempower.entity.*;
 import com.andhraempower.repository.ProjectRepository;
 import com.andhraempower.dao.LookupDAO;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,18 +25,26 @@ public class ProjectService {
     private final ProjectRepository projectRepository;
     private final LookupDAO lookupDAO;
 
+
     public void saveProject(ProjectRequestDto projectRequestDto) {
         log.info("Saving new project: {}", projectRequestDto);
         Optional<VillageLookup> village = getVillageLookup(projectRequestDto.getVillageId());
         Optional<CategoryLookup> category = getCategoryLookup(projectRequestDto.getProjectCategoryId());
         VillageProject project = getVillageProject(projectRequestDto, category, village);
-        project.setStatusCode(StatusEnum.NEW.name());
+        if( projectRequestDto.getProjectEstimation() > 0) {
+            project.setStatusCode(StatusEnum.WFD.name());
+        } else {
+            project.setStatusCode(StatusEnum.NEW.name());
+        }
         projectRepository.save(project);
         log.info("New Project saved successfully!");
     }
     public void updateProject(ProjectRequestDto projectRequestDto) {
         projectRepository.findById(projectRequestDto.getId())
                 .ifPresentOrElse(project -> {
+                    if(project.getStatusCode().equalsIgnoreCase(StatusEnum.NEW.name()) && projectRequestDto.getProjectEstimation() > 0){
+                        project.setStatusCode(StatusEnum.WFD.name());
+                    }
                     projectRepository.save(getUpdatedProject(project, projectRequestDto));
                     log.info("New Project Updated successfully!");
                 }, () -> {throw new IllegalArgumentException("Project Not found for the given Id : " + projectRequestDto.getId());});
@@ -47,9 +58,13 @@ public class ProjectService {
         return lookupDAO.getVillageById(villageId);
     }
 
-    public List<ProjectResponseDto> getProjects() {
+    public Page<ProjectResponseDto> getProjects(Pageable pageable) {
         log.info("Fetching all projects details.");
-        return projectRepository.findAllProjects();
+        Page<ProjectResponseDto> allProjects = projectRepository.findAllProjects(pageable);
+        allProjects.stream().forEach(projectResponseDto -> {
+            projectResponseDto.setStatus(StatusEnum.valueOf(projectResponseDto.getStatus()).getStatusDescription());
+        });
+        return allProjects;
     }
 
     public List<ProjectResponseDto> searchProjectsByDistrictMandalVillageCode(Long districtCode, Long mandalCode, Long villageCode) {
@@ -117,5 +132,20 @@ public class ProjectService {
     private static ProjectTypeLookup getProjectTypeLookup(ProjectRequestDto projectRequestDto, Optional<CategoryLookup> category) {
         return category.get().getProjects().stream().filter(projectType -> projectType.getId().equals(Long.parseLong(projectRequestDto.getProjectType())))
                 .findFirst().orElseThrow(() -> new IllegalArgumentException("Invalid Project Type Id : " + projectRequestDto.getProjectCategoryId()));
+    }
+
+    public ProjectsCountDto getProjectsCount() {
+        long count= projectRepository.count();
+        ProjectsCountDto dto = new ProjectsCountDto();
+        dto.setCount(count);
+        return dto;
+    }
+
+    public Page<ProjectResponseDto> getProjectsByProjectType(Long projectTypeId, Pageable pageable) {
+        return projectRepository.findByProjectTypeLookupId(projectTypeId, pageable);
+    }
+
+    public Page<ProjectResponseDto> getProjectsByProjectStatus(String status, Pageable pageable) {
+        return projectRepository.findByStatus(status, pageable);
     }
 }

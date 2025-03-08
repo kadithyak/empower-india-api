@@ -3,14 +3,9 @@ package com.andhraempower.dao;
 import java.util.List;
 import java.util.Optional;
 
+import com.andhraempower.entity.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-
-import com.andhraempower.entity.CategoryLookup;
-import com.andhraempower.entity.DistrictLookup;
-import com.andhraempower.entity.MandalLookup;
-import com.andhraempower.entity.StateLookup;
-import com.andhraempower.entity.VillageLookup;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
@@ -98,6 +93,13 @@ public class LookupDAOImpl implements LookupDAO {
 
         List<CategoryLookup> result = query.getResultList();
         return result.isEmpty() ? Optional.empty() : Optional.of(result.get(0));
+    }
+
+    @Override
+    public List<ProjectTypeLookup> getProjectTypes() {
+        TypedQuery<ProjectTypeLookup> theQuery = entityManager.createQuery("FROM ProjectTypeLookup order by id"
+                , ProjectTypeLookup.class);
+        return theQuery.getResultList();
     }
 
 }
