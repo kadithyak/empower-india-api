@@ -69,7 +69,11 @@ public class ProjectService {
 
     public Page<ProjectResponseDto> searchProjectsByDistrictMandalVillageCode(Long districtCode, Long mandalCode, Long villageCode, Pageable pageable) {
         log.info("searchProjectsByDistrictMandalVillageCode districtCode {}, mandalCode{}, villageCode {}", districtCode, mandalCode, villageCode);
-        return projectRepository.searchProjects(districtCode, mandalCode, villageCode, pageable);
+        Page<ProjectResponseDto> searchedProjects = projectRepository.searchProjects(districtCode, mandalCode, villageCode, pageable);
+        searchedProjects.stream().forEach(projectResponseDto -> {
+            projectResponseDto.setStatus(StatusEnum.valueOf(projectResponseDto.getStatus()).getStatusDescription());
+        });
+        return searchedProjects;
     }
 
     private VillageProject getUpdatedProject(VillageProject villageProject, ProjectRequestDto projectRequestDto){
