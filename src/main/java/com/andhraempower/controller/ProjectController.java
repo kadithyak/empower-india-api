@@ -136,11 +136,14 @@ public class ProjectController {
             @ApiResponse(responseCode = EmpowerConstants.RESOURCE_NOT_FOUND_CODE, description = EmpowerConstants.RESOURCE_NOT_FOUND_CODE_DESC),
             @ApiResponse(responseCode = EmpowerConstants.UNEXPECTED_SERVER_ERROR_CODE, description = EmpowerConstants.UNEXPECTED_SERVER_ERROR_CODE_DESC)
     })
-    public ResponseEntity<List<ProjectResponseDto>> searchProjects(@RequestParam(name = "districtId") Long districtCode
-            , @RequestParam(name = "mandalId", required = false) Long mandalCode, @RequestParam(name = "villageId", required = false) Long villageCode) {
+    public ResponseEntity<Page<ProjectResponseDto>> searchProjects(@RequestParam(name = "districtId") Long districtCode
+            , @RequestParam(name = "mandalId", required = false) Long mandalCode, @RequestParam(name = "villageId", required = false) Long villageCode,
+                                                                   @RequestParam(name = "page", defaultValue = "0") int page,
+                                                                   @RequestParam(name = "size", defaultValue = "10") int size) {
         try {
             log.debug("Request received for search project districtId : {}, mandalId : {}, villageId : {}", districtCode, mandalCode, villageCode);
-            List<ProjectResponseDto> projects = projectService.searchProjectsByDistrictMandalVillageCode(districtCode, mandalCode, villageCode);
+            Pageable pageable = PageRequest.of(page, size, Sort.unsorted());
+            Page<ProjectResponseDto> projects = projectService.searchProjectsByDistrictMandalVillageCode(districtCode, mandalCode, villageCode,pageable);
             return ResponseEntity.ok(projects);
         }catch (Exception e){
             log.error("Error while searching projects", e);

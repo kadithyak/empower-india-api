@@ -67,9 +67,9 @@ public class ProjectService {
         return allProjects;
     }
 
-    public List<ProjectResponseDto> searchProjectsByDistrictMandalVillageCode(Long districtCode, Long mandalCode, Long villageCode) {
+    public Page<ProjectResponseDto> searchProjectsByDistrictMandalVillageCode(Long districtCode, Long mandalCode, Long villageCode, Pageable pageable) {
         log.info("searchProjectsByDistrictMandalVillageCode districtCode {}, mandalCode{}, villageCode {}", districtCode, mandalCode, villageCode);
-        return projectRepository.searchProjects(districtCode, mandalCode, villageCode);
+        return projectRepository.searchProjects(districtCode, mandalCode, villageCode, pageable);
     }
 
     private VillageProject getUpdatedProject(VillageProject villageProject, ProjectRequestDto projectRequestDto){

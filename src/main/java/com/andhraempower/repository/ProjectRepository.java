@@ -40,8 +40,8 @@ public interface ProjectRepository extends JpaRepository<VillageProject, Long> {
             "AND (:mandalId IS NULL OR ml.id = :mandalId) " +
             "AND (:villageId IS NULL OR vl.id = :villageId)"
     )
-    List<ProjectResponseDto> searchProjects(@Param("districtId") Long districtId
-            , @Param("mandalId") Long mandalId, @Param("villageId") Long villageId);
+    Page<ProjectResponseDto> searchProjects(@Param("districtId") Long districtId
+            , @Param("mandalId") Long mandalId, @Param("villageId") Long villageId, Pageable pageable);
 
     @Query("SELECT new com.andhraempower.dto.ProjectResponseDto( " +
             "vp.id, vp.projectCategory.name,vp.projectCategory.id, vp.projectTypeLookup.description,vp.projectTypeLookup.id," +
