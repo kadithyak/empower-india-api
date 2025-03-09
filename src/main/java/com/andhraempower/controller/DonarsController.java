@@ -105,8 +105,8 @@ public class DonarsController {
         }
     }
 
-    @GetMapping(value = "/project/top-donars/{topN}",produces = {EmpowerConstants.APPLICATION_JSON})
-    @Operation(summary = "List of top n Donars")
+    @GetMapping(value = "/all-donars",produces = {EmpowerConstants.APPLICATION_JSON})
+    @Operation(summary = "List of All  Donars")
     @ApiResponses(value = {
             @ApiResponse(responseCode = EmpowerConstants.SUCCESS_CODE, description = EmpowerConstants.SUCCESS_CODE_DESC),
             @ApiResponse(responseCode = EmpowerConstants.BAD_REQUEST_CODE, description = EmpowerConstants.BAD_REQUEST_CODE_DESC),
@@ -115,24 +115,11 @@ public class DonarsController {
             @ApiResponse(responseCode = EmpowerConstants.RESOURCE_NOT_FOUND_CODE, description = EmpowerConstants.RESOURCE_NOT_FOUND_CODE_DESC),
             @ApiResponse(responseCode = EmpowerConstants.UNEXPECTED_SERVER_ERROR_CODE, description = EmpowerConstants.UNEXPECTED_SERVER_ERROR_CODE_DESC)
     })
-    public ResponseEntity<List<DonarDto>> getTopDonars(@PathVariable("topN") Integer topN) {
-        return ResponseEntity.ok().body(donarsService.getTopDonars(topN));
+    public ResponseEntity<List<DonarDto>> getDonars(@RequestParam(name = "topN", required = false) Integer topN) {
+        return ResponseEntity.ok().body(donarsService.getDonars(topN));
     }
 
-    @GetMapping(value = "/project/all-donars",produces = {EmpowerConstants.APPLICATION_JSON})
-    @Operation(summary = "Fetch all Donars")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = EmpowerConstants.SUCCESS_CODE, description = EmpowerConstants.SUCCESS_CODE_DESC),
-            @ApiResponse(responseCode = EmpowerConstants.BAD_REQUEST_CODE, description = EmpowerConstants.BAD_REQUEST_CODE_DESC),
-            @ApiResponse(responseCode = EmpowerConstants.UNAUTHORIZED_CODE, description = EmpowerConstants.UNAUTHORIZED_CODE_DESC),
-            @ApiResponse(responseCode = EmpowerConstants.FORBIDDEN_CODE, description = EmpowerConstants.FORBIDDEN_CODE_DESC),
-            @ApiResponse(responseCode = EmpowerConstants.RESOURCE_NOT_FOUND_CODE, description = EmpowerConstants.RESOURCE_NOT_FOUND_CODE_DESC),
-            @ApiResponse(responseCode = EmpowerConstants.UNEXPECTED_SERVER_ERROR_CODE, description = EmpowerConstants.UNEXPECTED_SERVER_ERROR_CODE_DESC)
-    })
-    public ResponseEntity<List<DonarDto>> getAllDonars() {
-        return ResponseEntity.ok().body(donarsService.getAllDonars());
-    }
-
+   
     // Fetch Donar by firstName, lastName, phoneNumber, email, address
     @PostMapping(value = "/project/donar",produces = {EmpowerConstants.APPLICATION_JSON})
     @Operation(summary = "Fetch Donar by firstName, lastName, phoneNumber, email, address")

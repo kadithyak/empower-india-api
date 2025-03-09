@@ -27,13 +27,25 @@ public class DonarDto {
     private String memoryOf;
     private String modeOfPayment;
 
-    public DonarDto(String firstName, String lastName, String phoneNumber, String email, String address,  Double amount, String category) {
+    public DonarDto(String firstName, String lastName, String phoneNumber, String email, 
+    String address,  
+    Integer villageId, String villageName,
+    Integer mandalId, String mandalName,
+    Integer districtId, String districtName,
+    Double amount, String category) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.phoneNumber = phoneNumber;
         this.email = email;
         this.address = address;
+        this.villageId = villageId;
+        this.villageName = villageName;
+        this.mandalId = mandalId;
+        this.mandalName = mandalName;
+        this.districtId = districtId;
+        this.districtName = districtName;
         this.amount = amount;
+        this.category = category;
 
     }
 
