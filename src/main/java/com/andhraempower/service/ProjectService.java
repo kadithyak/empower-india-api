@@ -31,7 +31,8 @@ public class ProjectService {
         Optional<VillageLookup> village = getVillageLookup(projectRequestDto.getVillageId());
         Optional<CategoryLookup> category = getCategoryLookup(projectRequestDto.getProjectCategoryId());
         VillageProject project = getVillageProject(projectRequestDto, category, village);
-        if( projectRequestDto.getProjectEstimation() > 0) {
+        if(projectRequestDto.getProjectEstimation() != null &&
+                projectRequestDto.getProjectEstimation() > 0) {
             project.setStatusCode(StatusEnum.WFD.name());
         } else {
             project.setStatusCode(StatusEnum.NEW.name());
@@ -42,7 +43,8 @@ public class ProjectService {
     public void updateProject(ProjectRequestDto projectRequestDto) {
         projectRepository.findById(projectRequestDto.getId())
                 .ifPresentOrElse(project -> {
-                    if(project.getStatusCode().equalsIgnoreCase(StatusEnum.NEW.name()) && projectRequestDto.getProjectEstimation() > 0){
+                    if(project.getStatusCode().equalsIgnoreCase(StatusEnum.NEW.name()) && (projectRequestDto.getProjectEstimation() != null &&
+                            projectRequestDto.getProjectEstimation() > 0)){
                         project.setStatusCode(StatusEnum.WFD.name());
                     }
                     projectRepository.save(getUpdatedProject(project, projectRequestDto));
