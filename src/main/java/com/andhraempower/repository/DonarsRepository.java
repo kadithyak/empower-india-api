@@ -15,7 +15,7 @@ import org.springframework.stereotype.Repository;
 public interface DonarsRepository extends JpaRepository<Donar, Integer> {
 
 @Query("SELECT new com.andhraempower.dto.DonarDto( " +
-    "d.firstName, d.lastName, d.phoneNumber, d.email, d.address, SUM(vpl.amount), " +
+    "d.firstName, d.lastName, d.phoneNumber, d.email, d.address, vl.id, vl.name, ml.id, ml.name, dl.id, dl.name, SUM(vpl.amount), " +
     "(SELECT sc.categoryName FROM SponsorCategory sc " +
     "WHERE SUM(vpl.amount) >= sc.minAmount " +
     "AND (sc.maxAmount IS NULL OR SUM(vpl.amount) <= sc.maxAmount) " +
@@ -25,24 +25,13 @@ public interface DonarsRepository extends JpaRepository<Donar, Integer> {
     ") " +
     "FROM VillageProjectDonar vpl " +
     "JOIN Donar d ON vpl.donar.id = d.id " +
-    "GROUP BY d.firstName, d.lastName, d.phoneNumber, d.email, d.address " +
+    "LEFT JOIN VillageLookup vl ON d.village.id = vl.id " +
+    "LEFT JOIN MandalLookup ml ON vl.mandalId = ml.id " +
+    "LEFT JOIN DistrictLookup dl ON ml.districtId = dl.id "+
+    "GROUP BY d.firstName, d.lastName, d.phoneNumber, d.email, d.address, vl.id, vl.name, ml.id, ml.name, dl.id, dl.name " +
     "ORDER BY SUM(vpl.amount) DESC")
-  List<DonarDto> findTopDonars(Pageable pageable);
+  List<DonarDto> findDonars(Pageable pageable);
 
-@Query("SELECT new com.andhraempower.dto.DonarDto( " +
-    "d.firstName, d.lastName, d.phoneNumber, d.email, d.address, SUM(vpl.amount), " +
-    "(SELECT sc.categoryName FROM SponsorCategory sc " +
-    "WHERE SUM(vpl.amount) >= sc.minAmount " +
-    "AND (sc.maxAmount IS NULL OR SUM(vpl.amount) <= sc.maxAmount) " +
-    "AND sc.minAmount = (SELECT MAX(sc2.minAmount) FROM SponsorCategory sc2 " +
-    "WHERE SUM(vpl.amount) >= sc2.minAmount) " +
-    ") " +
-    ") " +
-    "FROM VillageProjectDonar vpl " +
-    "JOIN Donar d ON vpl.donar.id = d.id " +
-    "GROUP BY d.firstName, d.lastName, d.phoneNumber, d.email, d.address " +
-    "ORDER BY SUM(vpl.amount) DESC")
-  List<DonarDto> findAllDonars();
 
   @Query("SELECT new com.andhraempower.dto.DonarDto( " +
     "d.id, d.firstName, d.lastName, d.phoneNumber, d.email, d.address, vl.id, vl.name, ml.id, ml.name, dl.id, dl.name, d.memoryOf, vpl.amount) "+ 

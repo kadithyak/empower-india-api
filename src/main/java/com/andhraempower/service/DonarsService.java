@@ -2,8 +2,6 @@ package com.andhraempower.service;
 
 import com.andhraempower.dao.LookupDAO;
 import com.andhraempower.dto.DonarDto;
-import com.andhraempower.entity.Donar;
-import com.andhraempower.entity.VillageProjectDonar;
 import com.andhraempower.entity.*;
 import com.andhraempower.repository.DonarsRepository;
 import com.andhraempower.repository.VillageProjectDonarRepository;
@@ -73,14 +71,9 @@ public class DonarsService {
         villageProjectDonarRepository.deleteByIdAndVillageProjectId(committeeId, projectId);
     }
 
-    public List<DonarDto> getTopDonars(Integer topN) {
-        int pageSize = (int) topN;  // Convert long to int safely
-        Pageable pageable = PageRequest.of(0, pageSize); 
-        return donarsRepository.findTopDonars(pageable);
-    }
-
-    public List<DonarDto> getAllDonars() {
-        return donarsRepository.findAllDonars();
+public List<DonarDto> getDonars(Integer topN) {
+        Pageable pageable = (topN != null && topN > 0) ? PageRequest.of(0, topN) : Pageable.unpaged();
+        return donarsRepository.findDonars(pageable);
     }
 
     public List<DonarDto> getDonar(Donar donar) {
