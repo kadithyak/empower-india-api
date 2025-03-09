@@ -31,7 +31,8 @@ public class ProjectService {
         Optional<VillageLookup> village = getVillageLookup(projectRequestDto.getVillageId());
         Optional<CategoryLookup> category = getCategoryLookup(projectRequestDto.getProjectCategoryId());
         VillageProject project = getVillageProject(projectRequestDto, category, village);
-        if( projectRequestDto.getProjectEstimation() > 0) {
+        if(projectRequestDto.getProjectEstimation() != null &&
+                projectRequestDto.getProjectEstimation() > 0) {
             project.setStatusCode(StatusEnum.WFD.name());
         } else {
             project.setStatusCode(StatusEnum.NEW.name());
@@ -42,7 +43,8 @@ public class ProjectService {
     public void updateProject(ProjectRequestDto projectRequestDto) {
         projectRepository.findById(projectRequestDto.getId())
                 .ifPresentOrElse(project -> {
-                    if(project.getStatusCode().equalsIgnoreCase(StatusEnum.NEW.name()) && projectRequestDto.getProjectEstimation() > 0){
+                    if(project.getStatusCode().equalsIgnoreCase(StatusEnum.NEW.name()) && (projectRequestDto.getProjectEstimation() != null &&
+                            projectRequestDto.getProjectEstimation() > 0)){
                         project.setStatusCode(StatusEnum.WFD.name());
                     }
                     projectRepository.save(getUpdatedProject(project, projectRequestDto));
@@ -71,7 +73,7 @@ public class ProjectService {
         log.info("searchProjectsByDistrictMandalVillageCode districtCode {}, mandalCode{}, villageCode {}", districtCode, mandalCode, villageCode);
         Page<ProjectResponseDto> searchedProjects = projectRepository.searchProjects(districtCode, mandalCode, villageCode, pageable);
         searchedProjects.stream().forEach(projectResponseDto -> {
-            projectResponseDto.setStatus(StatusEnum.valueOf(projectResponseDto.getStatus()).getStatusDescription());
+            projectResponseDto.setStatus(StatusEnum.valueOf(projectResponseDto.getStatus().toUpperCase()).getStatusDescription());
         });
         return searchedProjects;
     }
