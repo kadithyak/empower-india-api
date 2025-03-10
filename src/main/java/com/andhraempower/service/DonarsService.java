@@ -95,7 +95,7 @@ public List<DonarDto> getDonars(Integer topN) {
         return donarsRepository.findDonars(pageable);
     }
 
-    public List<DonarDto> getDonar(Donar donar) {
+    public List<DonarInfoDto> getDonar(Donar donar) {
         return donarsRepository.findDonar(donar.getFirstName(), donar.getLastName(), donar.getPhoneNumber(), donar.getEmail(), donar.getAddress());
     }
 }
