@@ -19,4 +19,6 @@ public class EmpowerConstants {
 
     public static final String USER_ADMIN = "Admin";
 
+    public static final String PROJECT_FLOW = "PROJECT_FLOW";
+
 }

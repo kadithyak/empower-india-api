@@ -2,6 +2,9 @@ package com.andhraempower.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.context.annotation.Lazy;
+
+import java.util.List;
 
 @Entity
 @Table(name = "village_project")
@@ -63,5 +66,10 @@ public class VillageProject {
     @ManyToOne
     @JoinColumn(name = "village_id", nullable = false)
     private VillageLookup village;
+
+    @OneToMany
+    @JoinColumn(name = "village_project_id")
+    @Lazy
+    private List<VillageProjectDonar> villageProjectDonars;
 
 }

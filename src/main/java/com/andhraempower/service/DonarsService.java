@@ -1,11 +1,15 @@
 package com.andhraempower.service;
 
+import com.andhraempower.constants.ProjectWorkFlowStatus;
+import com.andhraempower.constants.StatusEnum;
 import com.andhraempower.dao.LookupDAO;
 import com.andhraempower.dto.DonarDto;
-import com.andhraempower.entity.Donar;
-import com.andhraempower.entity.VillageProjectDonar;
+import com.andhraempower.dto.DonarInfoDto;
 import com.andhraempower.entity.*;
+import com.andhraempower.events.StatusChangeEvent;
+import com.andhraempower.events.StatusChangePublisher;
 import com.andhraempower.repository.DonarsRepository;
+import com.andhraempower.repository.ProjectRepository;
 import com.andhraempower.repository.VillageProjectDonarRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,6 +18,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -22,6 +27,7 @@ import java.util.stream.Collectors;
 import org.springframework.data.domain.Pageable;
 
 import static com.andhraempower.constants.EmpowerConstants.USER_ADMIN;
+import static com.andhraempower.constants.ProjectWorkFlowStatus.SPONSOR_ADDED;
 
 @AllArgsConstructor
 @Service
@@ -34,7 +40,15 @@ public class DonarsService {
     @Autowired
     private LookupDAO lookupDAO;
 
+    @Autowired
     private VillageProjectDonarRepository villageProjectDonarRepository;
+
+    @Autowired
+    private ProjectRepository projectRepository;
+
+    private final StatusChangePublisher statusChangePublisher;
+
+
 
     public Donar addDonars(DonarDto donars) {
         Donar donar = donars.fromDto();
@@ -54,7 +68,10 @@ public class DonarsService {
             villageProjectDonar.setModeOfPayment(modeOfPayment);
             villageProjectDonar.setCreatedBy(USER_ADMIN);
             villageProjectDonarRepository.save(villageProjectDonar);
+            statusChangePublisher.publishStatusChange(new StatusChangeEvent(projectId, SPONSOR_ADDED, USER_ADMIN, LocalDateTime.now()));
         });
+
+
     }
 
     public List<Donar> getDonars(Long projectId) {
@@ -73,17 +90,12 @@ public class DonarsService {
         villageProjectDonarRepository.deleteByIdAndVillageProjectId(committeeId, projectId);
     }
 
-    public List<DonarDto> getTopDonars(Integer topN) {
-        int pageSize = (int) topN;  // Convert long to int safely
-        Pageable pageable = PageRequest.of(0, pageSize); 
-        return donarsRepository.findTopDonars(pageable);
+public List<DonarDto> getDonars(Integer topN) {
+        Pageable pageable = (topN != null && topN > 0) ? PageRequest.of(0, topN) : Pageable.unpaged();
+        return donarsRepository.findDonars(pageable);
     }
 
-    public List<DonarDto> getAllDonars() {
-        return donarsRepository.findAllDonars();
-    }
-
-    public List<DonarDto> getDonar(Donar donar) {
+    public List<DonarInfoDto> getDonar(Donar donar) {
         return donarsRepository.findDonar(donar.getFirstName(), donar.getLastName(), donar.getPhoneNumber(), donar.getEmail(), donar.getAddress());
     }
 }
