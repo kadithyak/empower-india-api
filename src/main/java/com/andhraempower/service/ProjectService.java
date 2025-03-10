@@ -1,21 +1,30 @@
 package com.andhraempower.service;
 
 import com.andhraempower.constants.StatusEnum;
+import com.andhraempower.dao.LookupDAO;
 import com.andhraempower.dto.ProjectRequestDto;
 import com.andhraempower.dto.ProjectResponseDto;
 import com.andhraempower.dto.ProjectsCountDto;
 import com.andhraempower.entity.*;
+import com.andhraempower.events.StatusChangeEvent;
+import com.andhraempower.events.StatusChangePublisher;
 import com.andhraempower.repository.ProjectRepository;
-import com.andhraempower.dao.LookupDAO;
+import com.andhraempower.repository.VillageProjectDonarRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
+
+import static com.andhraempower.constants.EmpowerConstants.USER_ADMIN;
+import static com.andhraempower.constants.ProjectWorkFlowStatus.ESTIMATION_ADDED;
+import static com.andhraempower.constants.ProjectWorkFlowStatus.NEW_PROJECT_CREATED;
 
 @AllArgsConstructor
 @Service
@@ -24,6 +33,9 @@ public class ProjectService {
 
     private final ProjectRepository projectRepository;
     private final LookupDAO lookupDAO;
+    private final StatusChangePublisher statusChangePublisher;
+    @Autowired
+    private VillageProjectDonarRepository villageProjectDonarRepository;
 
 
     public void saveProject(ProjectRequestDto projectRequestDto) {
@@ -37,17 +49,18 @@ public class ProjectService {
         } else {
             project.setStatusCode(StatusEnum.NEW.name());
         }
-        projectRepository.save(project);
+        VillageProject villageProject = projectRepository.save(project);
         log.info("New Project saved successfully!");
+        statusChangePublisher.publishStatusChange(new StatusChangeEvent(villageProject.getId(), NEW_PROJECT_CREATED, USER_ADMIN, LocalDateTime.now()));
     }
     public void updateProject(ProjectRequestDto projectRequestDto) {
         projectRepository.findById(projectRequestDto.getId())
                 .ifPresentOrElse(project -> {
-                    if(project.getStatusCode().equalsIgnoreCase(StatusEnum.NEW.name()) && (projectRequestDto.getProjectEstimation() != null &&
-                            projectRequestDto.getProjectEstimation() > 0)){
-                        project.setStatusCode(StatusEnum.WFD.name());
-                    }
+                    Double existingProjectEstimation = project.getProjectEstimation();
                     projectRepository.save(getUpdatedProject(project, projectRequestDto));
+                    if(!existingProjectEstimation.equals(projectRequestDto.getProjectEstimation())) {
+                        statusChangePublisher.publishStatusChange(new StatusChangeEvent(project.getId(), ESTIMATION_ADDED, USER_ADMIN, LocalDateTime.now()));
+                    }
                     log.info("New Project Updated successfully!");
                 }, () -> {throw new IllegalArgumentException("Project Not found for the given Id : " + projectRequestDto.getId());});
     }
@@ -64,15 +77,29 @@ public class ProjectService {
         log.info("Fetching all projects details.");
         Page<ProjectResponseDto> allProjects = projectRepository.findAllProjects(pageable);
         allProjects.stream().forEach(projectResponseDto -> {
+            setRemainingRequiredAmount(projectResponseDto);
             projectResponseDto.setStatus(StatusEnum.valueOf(projectResponseDto.getStatus()).getStatusDescription());
+
         });
         return allProjects;
+    }
+
+    private void setRemainingRequiredAmount(ProjectResponseDto projectResponseDto) {
+        Double sponsereddAmount = 0d;
+        List<VillageProjectDonar> byVillageProjectId = villageProjectDonarRepository.getByVillageProjectId(projectResponseDto.getId());
+        if(!CollectionUtils.isEmpty(byVillageProjectId)){
+            sponsereddAmount = byVillageProjectId.stream().mapToDouble(VillageProjectDonar::getAmount).sum();
+            projectResponseDto.setRemainingRequiredAmount(projectResponseDto.getProjectEstimation() - sponsereddAmount);
+        } else {
+            projectResponseDto.setRemainingRequiredAmount(projectResponseDto.getProjectEstimation());
+        }
     }
 
     public Page<ProjectResponseDto> searchProjectsByDistrictMandalVillageCode(Long districtCode, Long mandalCode, Long villageCode, Pageable pageable) {
         log.info("searchProjectsByDistrictMandalVillageCode districtCode {}, mandalCode{}, villageCode {}", districtCode, mandalCode, villageCode);
         Page<ProjectResponseDto> searchedProjects = projectRepository.searchProjects(districtCode, mandalCode, villageCode, pageable);
         searchedProjects.stream().forEach(projectResponseDto -> {
+            setRemainingRequiredAmount(projectResponseDto);
             projectResponseDto.setStatus(StatusEnum.valueOf(projectResponseDto.getStatus().toUpperCase()).getStatusDescription());
         });
         return searchedProjects;
@@ -148,10 +175,20 @@ public class ProjectService {
     }
 
     public Page<ProjectResponseDto> getProjectsByProjectType(Long projectTypeId, Pageable pageable) {
-        return projectRepository.findByProjectTypeLookupId(projectTypeId, pageable);
+        Page<ProjectResponseDto> searchedProjects = projectRepository.findByProjectTypeLookupId(projectTypeId, pageable);
+        searchedProjects.stream().forEach(projectResponseDto -> {
+            setRemainingRequiredAmount(projectResponseDto);
+            projectResponseDto.setStatus(StatusEnum.valueOf(projectResponseDto.getStatus().toUpperCase()).getStatusDescription());
+        });
+        return searchedProjects;
     }
 
     public Page<ProjectResponseDto> getProjectsByProjectStatus(String status, Pageable pageable) {
-        return projectRepository.findByStatus(status, pageable);
+        Page<ProjectResponseDto> searchedProjects = projectRepository.findByStatus(status, pageable);
+        searchedProjects.stream().forEach(projectResponseDto -> {
+            setRemainingRequiredAmount(projectResponseDto);
+            projectResponseDto.setStatus(StatusEnum.valueOf(projectResponseDto.getStatus().toUpperCase()).getStatusDescription());
+        });
+        return searchedProjects;
     }
 }

@@ -1,7 +1,6 @@
 package com.andhraempower.repository;
 
 import com.andhraempower.dto.ProjectResponseDto;
-import com.andhraempower.entity.ProjectStatusLookup;
 import com.andhraempower.entity.VillageProject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -10,7 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ProjectRepository extends JpaRepository<VillageProject, Long> {
@@ -68,4 +67,6 @@ public interface ProjectRepository extends JpaRepository<VillageProject, Long> {
             "JOIN DistrictLookup dl ON ml.districtId = dl.id " +
             "WHERE vp.status = :status")
     Page<ProjectResponseDto> findByStatus(@Param("status") String status, Pageable pageable);
+
+    Optional<VillageProject> findById(Long id);
 }

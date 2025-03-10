@@ -73,8 +73,9 @@ public class DonarsController {
             @ApiResponse(responseCode = EmpowerConstants.RESOURCE_NOT_FOUND_CODE, description = EmpowerConstants.RESOURCE_NOT_FOUND_CODE_DESC),
             @ApiResponse(responseCode = EmpowerConstants.UNEXPECTED_SERVER_ERROR_CODE, description = EmpowerConstants.UNEXPECTED_SERVER_ERROR_CODE_DESC)
     })
-    public ResponseEntity<Donar> updateDonars(@RequestBody DonarDto donarDto) {
-        log.debug("Adding donar {} ", donarDto);
+    public ResponseEntity<Donar> updateDonars(@RequestParam(value = "projectId",required = false) Long projectId
+            , @RequestBody DonarDto donarDto) {
+        log.debug("updateDonars donar {}  and project Id {}", donarDto, projectId);
         try {
             if(donarDto.getId() == null ){
                 return ResponseEntity.badRequest().build();

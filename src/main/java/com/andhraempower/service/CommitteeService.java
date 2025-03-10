@@ -1,7 +1,10 @@
 package com.andhraempower.service;
 
+import com.andhraempower.constants.ProjectWorkFlowStatus;
 import com.andhraempower.entity.CommitteeMembers;
 import com.andhraempower.entity.VillageProjectCommitteeMembers;
+import com.andhraempower.events.StatusChangeEvent;
+import com.andhraempower.events.StatusChangePublisher;
 import com.andhraempower.repository.CommitteeMemberRepository;
 import com.andhraempower.repository.VillageProjectComitteeMemberRepository;
 import lombok.AllArgsConstructor;
@@ -10,12 +13,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static com.andhraempower.constants.EmpowerConstants.USER_ADMIN;
+import static com.andhraempower.constants.ProjectWorkFlowStatus.COMMITTEE_MEMBER_ADDED;
 
 @AllArgsConstructor
 @Service
@@ -25,6 +30,8 @@ public class CommitteeService {
     private  CommitteeMemberRepository committeeMemberRepository;
     @Autowired
     private VillageProjectComitteeMemberRepository villageProjectComitteeMemberRepository;
+
+    private StatusChangePublisher statusChangePublisher;
 
     public CommitteeMembers addCommitteeMember(CommitteeMembers member) {
         return committeeMemberRepository.save(member);
@@ -37,6 +44,7 @@ public class CommitteeService {
             villageProjectCommitteeMembers.setVillageProjectId(projectId);
             villageProjectCommitteeMembers.setCreatedBy(USER_ADMIN);
             villageProjectComitteeMemberRepository.save(villageProjectCommitteeMembers);
+            statusChangePublisher.publishStatusChange(new StatusChangeEvent(projectId, COMMITTEE_MEMBER_ADDED, USER_ADMIN, LocalDateTime.now()));
         });
     }
 
