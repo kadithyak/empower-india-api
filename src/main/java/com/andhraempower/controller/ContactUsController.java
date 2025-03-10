@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin
 @RestController
-@RequestMapping("/api/v1/contact")
+@RequestMapping("/api/v1/contact-us")
 @RequiredArgsConstructor
 @Slf4j
 public class ContactUsController {
@@ -34,6 +34,6 @@ public class ContactUsController {
     })
     public ResponseEntity<String> submitContactForm(@RequestBody ContactRequestDto contactRequestDto) {
         contactService.saveContact(contactRequestDto);
-        return ResponseEntity.ok("Successfully added");
+        return ResponseEntity.ok("Your information has been submitted successfully");
     }
 }
