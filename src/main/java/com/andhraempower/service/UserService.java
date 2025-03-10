@@ -5,6 +5,7 @@ import com.andhraempower.dto.UserRequestDto;
 import com.andhraempower.dto.UserResponseDto;
 import com.andhraempower.entity.User;
 import com.andhraempower.exception.InvalidCredentialsException;
+import com.andhraempower.exception.UserAlreadyExistsException;
 import com.andhraempower.exception.UserNotFoundException;
 import com.andhraempower.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +35,16 @@ public class UserService {
     }
 
     public User createUser(UserRequestDto userRequestDto) {
+
+        if (userRepository.existsByUserName(userRequestDto.getUserName())) {
+            throw new UserAlreadyExistsException("Username already exists. Please choose another one.");
+        }
+
+        if (userRepository.existsByEmail(userRequestDto.getEmail())) {
+            throw new UserAlreadyExistsException("Email already exists. Please choose another one.");
+        }
+
+
         User user = new User();
         user.setFirstName(userRequestDto.getFirstName());
         user.setLastName(userRequestDto.getLastName());

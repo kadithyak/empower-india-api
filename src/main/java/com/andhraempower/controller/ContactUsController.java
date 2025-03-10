@@ -2,7 +2,7 @@ package com.andhraempower.controller;
 
 import com.andhraempower.constants.EmpowerConstants;
 import com.andhraempower.dto.ContactRequestDto;
-import com.andhraempower.service.ContactService;
+import com.andhraempower.service.ContactUsService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -17,10 +17,10 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/v1/contact")
 @RequiredArgsConstructor
 @Slf4j
-public class ContactController {
+public class ContactUsController {
 
     @Autowired
-    private ContactService contactService;
+    private ContactUsService contactService;
 
     @PostMapping("/submit")
     @Operation(summary = "Handles 'Contact Us' form submission and saves user inquiry.")

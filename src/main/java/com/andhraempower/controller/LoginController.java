@@ -23,9 +23,6 @@ public class LoginController {
     @Autowired
     private UserService userService;
 
-
-
-
     @PostMapping("/login")
     @Operation(summary = "Authenticates the user with the provided credentials and returns user information with roles.")
     @ApiResponses(value = {

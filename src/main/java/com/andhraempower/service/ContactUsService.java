@@ -2,15 +2,15 @@ package com.andhraempower.service;
 
 import com.andhraempower.dto.ContactRequestDto;
 import com.andhraempower.entity.Contact;
-import com.andhraempower.repository.ContactRepository;
+import com.andhraempower.repository.ContactUsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ContactService {
+public class ContactUsService {
 
     @Autowired
-    private ContactRepository contactRepository;
+    private ContactUsRepository contactRepository;
 
     public void saveContact(ContactRequestDto contactRequestDto) {
         Contact contact = new Contact();
