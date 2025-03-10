@@ -10,6 +10,15 @@ public class UserRequestDto {
     private String email;
     private String userName;
     private String password;
+    private String aboutYourSelf;
+
+    public String getAboutYourSelf() {
+        return aboutYourSelf;
+    }
+
+    public void setAboutYourSelf(String aboutYourSelf) {
+        this.aboutYourSelf = aboutYourSelf;
+    }
 
     public String getFirstName() {
         return firstName;

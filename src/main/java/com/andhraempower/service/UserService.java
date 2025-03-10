@@ -51,8 +51,8 @@ public class UserService {
         user.setPhoneNumber(userRequestDto.getPhoneNumber());
         user.setEmail(userRequestDto.getEmail());
         user.setUserName(userRequestDto.getUserName());
-
         user.setPassword(userRequestDto.getPassword());
+        user.setAboutYourSelf(userRequestDto.getAboutYourSelf());
 
         return userRepository.save(user);
     }

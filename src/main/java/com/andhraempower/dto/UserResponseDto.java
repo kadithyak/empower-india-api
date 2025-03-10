@@ -23,6 +23,8 @@ public class UserResponseDto {
 
     private String email;
 
+    private String aboutYourSelf;
+
     private List<RoleDto> roles;
 
     public UserResponseDto(User user) {
@@ -30,6 +32,7 @@ public class UserResponseDto {
         this.firstName = user.getFirstName();
         this.lastName = user.getLastName();
         this.phoneNumber = user.getPhoneNumber();
+        this.aboutYourSelf = user.getAboutYourSelf();
         this.email = user.getEmail();
         if (user.getRoles() != null && !user.getRoles().isEmpty()) {
             this.roles = user.getRoles().stream()

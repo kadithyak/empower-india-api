@@ -40,6 +40,9 @@ public class User extends Audit{
     @Column(name = "password")
     private String password;
 
+    @Column(name = "about_your_self")
+    private String aboutYourSelf;
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
         name = "user_roles",
@@ -110,5 +113,13 @@ public class User extends Audit{
 
     public void setRoles(List<Role> roles) {
         this.roles = roles;
+    }
+
+    public String getAboutYourSelf() {
+        return aboutYourSelf;
+    }
+
+    public void setAboutYourSelf(String aboutYourSelf) {
+        this.aboutYourSelf = aboutYourSelf;
     }
 }
