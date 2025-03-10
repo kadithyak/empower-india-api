@@ -1,5 +1,6 @@
 package com.andhraempower.repository;
 
+import com.andhraempower.dto.DonarDto;
 import com.andhraempower.entity.VillageProjectCommitteeMembers;
 import com.andhraempower.entity.VillageProjectDonar;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -18,7 +19,5 @@ public interface VillageProjectDonarRepository extends JpaRepository<VillageProj
     @Modifying
     @Query("DELETE FROM VillageProjectDonar vpd where vpd.villageProjectId = :projectId AND vpd.donar.id = :donarId")
     void deleteByIdAndVillageProjectId(@Param("donarId") Long id, @Param("projectId") Long villageProjectId);
-
-
 
 }

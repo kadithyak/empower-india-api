@@ -1,7 +1,9 @@
 package com.andhraempower.repository;
 
 import com.andhraempower.dto.DonarDto;
+import com.andhraempower.dto.DonarInfoDto;
 import com.andhraempower.entity.Donar;
+import com.andhraempower.entity.VillageProject;
 
 import java.util.List;
 
@@ -33,11 +35,17 @@ public interface DonarsRepository extends JpaRepository<Donar, Integer> {
   List<DonarDto> findDonars(Pageable pageable);
 
 
-  @Query("SELECT new com.andhraempower.dto.DonarDto( " +
-    "d.id, d.firstName, d.lastName, d.phoneNumber, d.email, d.address, vl.id, vl.name, ml.id, ml.name, dl.id, dl.name, d.memoryOf, vpl.amount) "+ 
-    "FROM VillageProjectDonar vpl " +
-    "JOIN Donar d ON vpl.donar.id = d.id " +
-    "LEFT JOIN VillageLookup vl ON d.village.id = vl.id " +
+  @Query("SELECT new com.andhraempower.dto.DonarInfoDto( " +
+    "d.id, d.firstName, d.lastName, d.phoneNumber, d.email, "+ 
+    "d.memoryOf, vpd.modeOfPayment, vpd.amount, "+ 
+    "vp.id, cl.name, ptl.description, "+ 
+    "vp.location, vl.id, vl.name, ml.id, ml.name, dl.id, dl.name ) "+
+    "FROM VillageProjectDonar vpd " +
+    "JOIN Donar d ON vpd.donar.id = d.id " +
+    "JOIN VillageProject vp ON vp.id = vpd.villageProjectId "+
+    "LEFT JOIN CategoryLookup cl ON vp.projectCategory.id = cl.id " +
+    "LEFT JOIN ProjectTypeLookup ptl ON vp.projectTypeLookup.id = ptl.id " +
+    "LEFT JOIN VillageLookup vl ON vp.village.id = vl.id " +
     "LEFT JOIN MandalLookup ml ON vl.mandalId = ml.id " +
     "LEFT JOIN DistrictLookup dl ON ml.districtId = dl.id "+
     "WHERE (:firstName IS NULL OR d.firstName = :firstName) " +
@@ -46,13 +54,12 @@ public interface DonarsRepository extends JpaRepository<Donar, Integer> {
     "AND (:email IS NULL OR d.email = :email) " +
     "AND (:address IS NULL OR d.address = :address) " +
     "ORDER BY d.id DESC")
-  List<DonarDto> findDonar(
+  List<DonarInfoDto> findDonar(
     @Param("firstName") String firstName,
     @Param("lastName") String lastName,
     @Param("phoneNumber") String phoneNumber,
     @Param("email") String email,
     @Param("address") String address
   );
-
 
 }

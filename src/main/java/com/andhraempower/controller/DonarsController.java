@@ -2,6 +2,7 @@ package com.andhraempower.controller;
 
 import com.andhraempower.constants.EmpowerConstants;
 import com.andhraempower.dto.DonarDto;
+import com.andhraempower.dto.DonarInfoDto;
 import com.andhraempower.dto.ProjectCategoriesDto;
 import com.andhraempower.entity.Donar;
 import com.andhraempower.service.DonarsService;
@@ -121,7 +122,7 @@ public class DonarsController {
 
    
     // Fetch Donar by firstName, lastName, phoneNumber, email, address
-    @PostMapping(value = "/project/donar",produces = {EmpowerConstants.APPLICATION_JSON})
+    @PostMapping(value = "/donar-project",produces = {EmpowerConstants.APPLICATION_JSON})
     @Operation(summary = "Fetch Donar by firstName, lastName, phoneNumber, email, address")
     @ApiResponses(value = {
             @ApiResponse(responseCode = EmpowerConstants.SUCCESS_CODE, description = EmpowerConstants.SUCCESS_CODE_DESC),
@@ -131,7 +132,7 @@ public class DonarsController {
             @ApiResponse(responseCode = EmpowerConstants.RESOURCE_NOT_FOUND_CODE, description = EmpowerConstants.RESOURCE_NOT_FOUND_CODE_DESC),
             @ApiResponse(responseCode = EmpowerConstants.UNEXPECTED_SERVER_ERROR_CODE, description = EmpowerConstants.UNEXPECTED_SERVER_ERROR_CODE_DESC)
     })
-    public ResponseEntity<List<DonarDto>> getDonar(@RequestBody Donar donar) {
+    public ResponseEntity<List<DonarInfoDto>> getDonar(@RequestBody Donar donar) {
         return ResponseEntity.ok().body(donarsService.getDonar(donar));
     }
 
