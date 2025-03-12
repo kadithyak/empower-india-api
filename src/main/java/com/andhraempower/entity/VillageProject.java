@@ -67,6 +67,15 @@ public class VillageProject {
     @JoinColumn(name = "village_id", nullable = false)
     private VillageLookup village;
 
+    @Column(name = "is_committee_formed")
+    private boolean committeeAdded;
+
+    @Column(name = "is_bank_account_added")
+    private boolean bankAccountAdded;
+
+    @Column(name = "is_estimation_completed")
+    private boolean estimationCompleted;
+
     @OneToMany
     @JoinColumn(name = "village_project_id")
     @Lazy

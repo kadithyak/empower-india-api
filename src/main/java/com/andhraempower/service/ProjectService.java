@@ -2,10 +2,7 @@ package com.andhraempower.service;
 
 import com.andhraempower.constants.StatusEnum;
 import com.andhraempower.dao.LookupDAO;
-import com.andhraempower.dto.DonarDto;
-import com.andhraempower.dto.ProjectRequestDto;
-import com.andhraempower.dto.ProjectResponseDto;
-import com.andhraempower.dto.ProjectsCountDto;
+import com.andhraempower.dto.*;
 import com.andhraempower.entity.*;
 import com.andhraempower.events.StatusChangeEvent;
 import com.andhraempower.events.StatusChangePublisher;
@@ -192,5 +189,34 @@ public class ProjectService {
         Page<ProjectResponseDto> searchedProjects = projectRepository.findByStatus(status, pageable);
         searchedProjects.stream().forEach(this::setAdditonalDetailsToProjectResponse);
         return searchedProjects;
+    }
+
+    public void saveProjectStatusSteps(ProjectStatusSteps projectStatusSteps, Long projectId) {
+        Optional.ofNullable(projectRepository.findById(projectId))
+                .ifPresentOrElse(project -> {
+                    VillageProject villageProject = project.get();
+                    villageProject.setCommitteeAdded(projectStatusSteps.isCommitteeFormed());
+                    villageProject.setEstimationCompleted(projectStatusSteps.isEstimationAdded());
+                    villageProject.setBankAccountAdded(projectStatusSteps.isBankDetailsAdded());
+                    projectRepository.save(villageProject);
+                }, () -> {throw new IllegalArgumentException("Project not found for the project id "+ projectId);});
+
+    }
+
+    public void publishProject(ProjectStatusSteps projectStatusSteps, Long projectId) {
+        if(!projectStatusSteps.isBankDetailsAdded() || !projectStatusSteps.isEstimationAdded() || !projectStatusSteps.isCommitteeFormed()) {
+            throw new IllegalArgumentException("You can not publish the project untill all the steps are completed");
+        }
+        Optional.ofNullable(projectRepository.findById(projectId))
+                .ifPresentOrElse(project -> {
+                    VillageProject villageProject = project.get();
+                    villageProject.setCommitteeAdded(projectStatusSteps.isCommitteeFormed());
+                    villageProject.setEstimationCompleted(projectStatusSteps.isEstimationAdded());
+                    villageProject.setBankAccountAdded(projectStatusSteps.isBankDetailsAdded());
+                    villageProject.setStatusCode(StatusEnum.WFD.name());
+                    villageProject.setStatus(StatusEnum.WFD.name());
+                    projectRepository.save(villageProject);
+                }, () -> {throw new IllegalArgumentException("Project not found for the project id "+ projectId);});
+
     }
 }

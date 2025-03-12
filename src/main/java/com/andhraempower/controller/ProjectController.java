@@ -3,8 +3,10 @@ package com.andhraempower.controller;
 import com.andhraempower.constants.EmpowerConstants;
 import com.andhraempower.dto.ProjectRequestDto;
 import com.andhraempower.dto.ProjectResponseDto;
+import com.andhraempower.dto.ProjectStatusSteps;
 import com.andhraempower.dto.ProjectsCountDto;
 import com.andhraempower.entity.ProjectStatusLookup;
+import com.andhraempower.entity.ProjectStatusTracking;
 import com.andhraempower.service.ProjectService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -135,6 +137,52 @@ public class ProjectController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }catch (Exception e){
             log.error("Exception while updating the project", e);
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
+    @PostMapping("/save-project-steps/{projectId}")
+    @Operation(summary = "Save the project completed steps like bank details added/committee formed/estimation added.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = EmpowerConstants.SUCCESS_CODE, description = "Project Updated successfully"),
+            @ApiResponse(responseCode = EmpowerConstants.BAD_REQUEST_CODE, description = "Invalid request data"),
+            @ApiResponse(responseCode = EmpowerConstants.UNAUTHORIZED_CODE, description = EmpowerConstants.UNAUTHORIZED_CODE_DESC),
+            @ApiResponse(responseCode = EmpowerConstants.FORBIDDEN_CODE, description = EmpowerConstants.FORBIDDEN_CODE_DESC),
+            @ApiResponse(responseCode = EmpowerConstants.RESOURCE_NOT_FOUND_CODE, description = EmpowerConstants.RESOURCE_NOT_FOUND_CODE_DESC),
+            @ApiResponse(responseCode = EmpowerConstants.UNEXPECTED_SERVER_ERROR_CODE, description = "Server error while saving project")
+    })
+    public ResponseEntity<String> saveProjectCompletionSteps(@PathVariable("projectId") Long projectId
+            , @RequestBody ProjectStatusSteps projectStatusSteps) {
+        try {
+            projectService.saveProjectStatusSteps(projectStatusSteps, projectId);
+            return ResponseEntity.ok("Successfully saved");
+        }catch (IllegalArgumentException e) {
+            log.error("Error while saving project status steps ",e);
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }catch (Exception e){
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
+    @PostMapping("/publish/{projectId}")
+    @Operation(summary = "Publish project to Waiting For Donors. all the steps should be completed")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = EmpowerConstants.SUCCESS_CODE, description = "Project Updated successfully"),
+            @ApiResponse(responseCode = EmpowerConstants.BAD_REQUEST_CODE, description = "Invalid request data"),
+            @ApiResponse(responseCode = EmpowerConstants.UNAUTHORIZED_CODE, description = EmpowerConstants.UNAUTHORIZED_CODE_DESC),
+            @ApiResponse(responseCode = EmpowerConstants.FORBIDDEN_CODE, description = EmpowerConstants.FORBIDDEN_CODE_DESC),
+            @ApiResponse(responseCode = EmpowerConstants.RESOURCE_NOT_FOUND_CODE, description = EmpowerConstants.RESOURCE_NOT_FOUND_CODE_DESC),
+            @ApiResponse(responseCode = EmpowerConstants.UNEXPECTED_SERVER_ERROR_CODE, description = "Server error while saving project")
+    })
+    public ResponseEntity<String> publishProject(@PathVariable("projectId") Long projectId
+            , @RequestBody ProjectStatusSteps projectStatusSteps) {
+        try {
+            projectService.publishProject(projectStatusSteps, projectId);
+            return ResponseEntity.ok("Successfully published");
+        }catch (IllegalArgumentException e) {
+            log.error("Error while publishing project status steps ",e);
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }catch (Exception e){
             return ResponseEntity.internalServerError().build();
         }
     }

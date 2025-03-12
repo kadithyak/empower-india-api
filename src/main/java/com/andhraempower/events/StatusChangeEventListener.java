@@ -53,9 +53,9 @@ public class StatusChangeEventListener {
             return isEligibleForWIP(projectId) ? StatusEnum.WIP : null;
         }
 
-        if(EVENTS_TO_CHECK_FOR_PROJECT_PUBLISH.contains(projectWorkFlowStatus)) {
+       /* if(EVENTS_TO_CHECK_FOR_PROJECT_PUBLISH.contains(projectWorkFlowStatus)) {
             return isProjectReadyToPublish(projectId) ? StatusEnum.WFD : null;
-        }
+        }*/
 
         return null;
     }
