@@ -1,7 +1,6 @@
 package com.andhraempower.dao;
 
 import java.util.List;
-import java.util.Locale.Category;
 import java.util.Optional;
 
 import com.andhraempower.entity.*;
@@ -25,4 +24,15 @@ public interface LookupDAO {
 
     List<ProjectTypeLookup> getProjectTypes();
 
+    List<CommunityLookUp> getCommunityLookUps();
+
+    List<OccupationLookUp> getOccupationLookUps();
+
+    List<LandUtilizationLookup> getLandUtilizationLookup();
+
+    List<CultivationCropsLookUps> getCultivationCropsLookup();
+
+    List<LiveStockLookUp> getLiveStockLookUp();
+
+    List<InstitutionsLookups> getInstitutionsLookups();
 }

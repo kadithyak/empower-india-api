@@ -102,4 +102,40 @@ public class LookupDAOImpl implements LookupDAO {
         return theQuery.getResultList();
     }
 
+    @Override
+    public List<CommunityLookUp> getCommunityLookUps() {
+        TypedQuery<CommunityLookUp> theQuery = entityManager.createQuery("FROM CommunityLookUp order by name", CommunityLookUp.class);
+        return theQuery.getResultList();
+    }
+
+    @Override
+    public List<OccupationLookUp> getOccupationLookUps() {
+        TypedQuery<OccupationLookUp> theQuery = entityManager.createQuery("FROM OccupationLookUp order by name", OccupationLookUp.class);
+        return theQuery.getResultList();
+    }
+
+    @Override
+    public List<LandUtilizationLookup> getLandUtilizationLookup() {
+        TypedQuery<LandUtilizationLookup> theQuery = entityManager.createQuery("FROM LandUtilizationLookup order by name", LandUtilizationLookup.class);
+        return theQuery.getResultList();
+    }
+
+    @Override
+    public List<CultivationCropsLookUps> getCultivationCropsLookup() {
+        TypedQuery<CultivationCropsLookUps> theQuery = entityManager.createQuery("FROM CultivationCropsLookUps order by name", CultivationCropsLookUps.class);
+        return theQuery.getResultList();
+    }
+
+    @Override
+    public List<LiveStockLookUp> getLiveStockLookUp() {
+        TypedQuery<LiveStockLookUp> theQuery = entityManager.createQuery("FROM LiveStockLookUp order by name", LiveStockLookUp.class);
+        return theQuery.getResultList();
+    }
+
+    @Override
+    public List<InstitutionsLookups> getInstitutionsLookups() {
+        TypedQuery<InstitutionsLookups> theQuery = entityManager.createQuery("FROM InstitutionsLookups order by name", InstitutionsLookups.class);
+        return theQuery.getResultList();
+    }
+
 }

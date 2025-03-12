@@ -1,6 +1,7 @@
 package com.andhraempower.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import com.andhraempower.entity.*;
 import org.springframework.http.ResponseEntity;
@@ -76,6 +77,20 @@ public class LookupController {
     @GetMapping("/project-types")
     public ResponseEntity<List<ProjectTypeLookup>> getProjectTypes() {
         return ResponseEntity.ok().body(lookupService.getPrjectTypes());
+    }
+
+    @GetMapping(value = "/village-lookups",produces = {EmpowerConstants.APPLICATION_JSON})
+    @Operation(summary = "List of Categories in VillageProject")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = EmpowerConstants.SUCCESS_CODE, description = EmpowerConstants.SUCCESS_CODE_DESC),
+            @ApiResponse(responseCode = EmpowerConstants.BAD_REQUEST_CODE, description = EmpowerConstants.BAD_REQUEST_CODE_DESC),
+            @ApiResponse(responseCode = EmpowerConstants.UNAUTHORIZED_CODE, description = EmpowerConstants.UNAUTHORIZED_CODE_DESC),
+            @ApiResponse(responseCode = EmpowerConstants.FORBIDDEN_CODE, description = EmpowerConstants.FORBIDDEN_CODE_DESC),
+            @ApiResponse(responseCode = EmpowerConstants.RESOURCE_NOT_FOUND_CODE, description = EmpowerConstants.RESOURCE_NOT_FOUND_CODE_DESC),
+            @ApiResponse(responseCode = EmpowerConstants.UNEXPECTED_SERVER_ERROR_CODE, description = EmpowerConstants.UNEXPECTED_SERVER_ERROR_CODE_DESC)
+    })
+    public ResponseEntity<Map<String,List<?>>> getVillageLooksUps() {
+        return ResponseEntity.ok().body(lookupService.getVillageLooksUps());
     }
 }
 

@@ -1,6 +1,7 @@
 package com.andhraempower.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.andhraempower.dto.ProjectCategoriesDto;
 import com.andhraempower.entity.*;
@@ -20,4 +21,6 @@ public interface LookupService {
     List<ProjectCategoriesDto> getCategoriesByProjects();
 
     List<ProjectTypeLookup> getPrjectTypes();
+
+    Map<String, List<?>> getVillageLooksUps();
 }

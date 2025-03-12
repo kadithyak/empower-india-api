@@ -1,6 +1,7 @@
 package com.andhraempower.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.andhraempower.entity.*;
 import org.springframework.stereotype.Service;
@@ -54,6 +55,16 @@ public class LookupServiceImpl implements LookupService {
     @Override
     public List<ProjectTypeLookup> getPrjectTypes() {
         return this.lookupDAO.getProjectTypes();
+    }
+
+    @Override
+    public Map<String, List<?>> getVillageLooksUps() {
+        return Map.of("community", this.lookupDAO.getCommunityLookUps(),
+                "occupation", this.lookupDAO.getOccupationLookUps(),
+                "landUtilization", this.lookupDAO.getLandUtilizationLookup(),
+                "cultivationCrops", this.lookupDAO.getCultivationCropsLookup(),
+                "liveStock", this.lookupDAO.getLiveStockLookUp(),
+                "institutions", this.lookupDAO.getInstitutionsLookups());
     }
 
 
