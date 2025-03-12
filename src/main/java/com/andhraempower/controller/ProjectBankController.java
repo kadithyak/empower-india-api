@@ -2,6 +2,7 @@ package com.andhraempower.controller;
 
 
 import com.andhraempower.constants.EmpowerConstants;
+import com.andhraempower.entity.Donar;
 import com.andhraempower.entity.ProjectBankDetail;
 import com.andhraempower.service.ProjectBankDetailsService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -12,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @CrossOrigin
@@ -69,4 +71,20 @@ public class ProjectBankController {
             return ResponseEntity.internalServerError().build();
         }
     }
+
+    @GetMapping(value = "/{projectId}",produces = {EmpowerConstants.APPLICATION_JSON, EmpowerConstants.TEXT_PLAIN})
+    @Operation(summary = "Displays BankDetails.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = EmpowerConstants.SUCCESS_CODE, description = EmpowerConstants.SUCCESS_CODE_DESC),
+            @ApiResponse(responseCode = EmpowerConstants.BAD_REQUEST_CODE, description = EmpowerConstants.BAD_REQUEST_CODE_DESC),
+            @ApiResponse(responseCode = EmpowerConstants.UNAUTHORIZED_CODE, description = EmpowerConstants.UNAUTHORIZED_CODE_DESC),
+            @ApiResponse(responseCode = EmpowerConstants.FORBIDDEN_CODE, description = EmpowerConstants.FORBIDDEN_CODE_DESC),
+            @ApiResponse(responseCode = EmpowerConstants.RESOURCE_NOT_FOUND_CODE, description = EmpowerConstants.RESOURCE_NOT_FOUND_CODE_DESC),
+            @ApiResponse(responseCode = EmpowerConstants.UNEXPECTED_SERVER_ERROR_CODE, description = EmpowerConstants.UNEXPECTED_SERVER_ERROR_CODE_DESC)
+    })
+    public List<ProjectBankDetail> getBankDetails(@PathVariable(value = "projectId") Long projectId) {
+        return projectBankDetailsService.getProjectBankDetails(projectId);
+    }
+
+
 }

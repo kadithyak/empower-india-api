@@ -2,6 +2,7 @@ package com.andhraempower.service;
 
 import com.andhraempower.constants.StatusEnum;
 import com.andhraempower.dao.LookupDAO;
+import com.andhraempower.dto.DonarDto;
 import com.andhraempower.dto.ProjectRequestDto;
 import com.andhraempower.dto.ProjectResponseDto;
 import com.andhraempower.dto.ProjectsCountDto;
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -76,32 +78,38 @@ public class ProjectService {
     public Page<ProjectResponseDto> getProjects(Pageable pageable) {
         log.info("Fetching all projects details.");
         Page<ProjectResponseDto> allProjects = projectRepository.findAllProjects(pageable);
-        allProjects.stream().forEach(projectResponseDto -> {
-            setRemainingRequiredAmount(projectResponseDto);
-            projectResponseDto.setStatus(StatusEnum.valueOf(projectResponseDto.getStatus()).getStatusDescription());
-
-        });
+        allProjects.stream().forEach(this::setAdditonalDetailsToProjectResponse);
         return allProjects;
     }
 
-    private void setRemainingRequiredAmount(ProjectResponseDto projectResponseDto) {
+    private void setAdditonalDetailsToProjectResponse(ProjectResponseDto projectResponseDto) {
+        projectResponseDto.setStatus(StatusEnum.valueOf(projectResponseDto.getStatus().toUpperCase()).getStatusDescription());
         Double sponsereddAmount = 0d;
         List<VillageProjectDonar> byVillageProjectId = villageProjectDonarRepository.getByVillageProjectId(projectResponseDto.getId());
         if(!CollectionUtils.isEmpty(byVillageProjectId)){
+            List<DonarDto> sponserList =  byVillageProjectId.stream().map(donar -> {
+                DonarDto.DonarDtoBuilder donarDtoBuilder = DonarDto.builder().id(donar.getId())
+                        .firstName(donar.getDonar().getFirstName()).lastName(donar.getDonar().getLastName())
+                        .phoneNumber(donar.getDonar().getPhoneNumber()).email(donar.getDonar().getEmail())
+                        .address(donar.getDonar().getAddress()).amount(donar.getAmount()).memoryOf(donar.getDonar().getMemoryOf()).modeOfPayment(donar.getModeOfPayment());
+                if(donar.getDonar().getVillage() != null) {
+                    donarDtoBuilder.villageId(donar.getDonar().getVillage().getId()).villageName(donar.getDonar().getVillage().getName());
+                }
+                return donarDtoBuilder.build();
+            }).toList();
+            projectResponseDto.setSponsersList(sponserList);
             sponsereddAmount = byVillageProjectId.stream().mapToDouble(VillageProjectDonar::getAmount).sum();
             projectResponseDto.setRemainingRequiredAmount(projectResponseDto.getProjectEstimation() - sponsereddAmount);
         } else {
             projectResponseDto.setRemainingRequiredAmount(projectResponseDto.getProjectEstimation());
+            projectResponseDto.setSponsersList(new ArrayList<>());
         }
     }
 
     public Page<ProjectResponseDto> searchProjectsByDistrictMandalVillageCode(Long districtCode, Long mandalCode, Long villageCode, Pageable pageable) {
         log.info("searchProjectsByDistrictMandalVillageCode districtCode {}, mandalCode{}, villageCode {}", districtCode, mandalCode, villageCode);
         Page<ProjectResponseDto> searchedProjects = projectRepository.searchProjects(districtCode, mandalCode, villageCode, pageable);
-        searchedProjects.stream().forEach(projectResponseDto -> {
-            setRemainingRequiredAmount(projectResponseDto);
-            projectResponseDto.setStatus(StatusEnum.valueOf(projectResponseDto.getStatus().toUpperCase()).getStatusDescription());
-        });
+        searchedProjects.stream().forEach(this::setAdditonalDetailsToProjectResponse);
         return searchedProjects;
     }
 
@@ -176,19 +184,13 @@ public class ProjectService {
 
     public Page<ProjectResponseDto> getProjectsByProjectType(Long projectTypeId, Pageable pageable) {
         Page<ProjectResponseDto> searchedProjects = projectRepository.findByProjectTypeLookupId(projectTypeId, pageable);
-        searchedProjects.stream().forEach(projectResponseDto -> {
-            setRemainingRequiredAmount(projectResponseDto);
-            projectResponseDto.setStatus(StatusEnum.valueOf(projectResponseDto.getStatus().toUpperCase()).getStatusDescription());
-        });
+        searchedProjects.stream().forEach(this::setAdditonalDetailsToProjectResponse);
         return searchedProjects;
     }
 
     public Page<ProjectResponseDto> getProjectsByProjectStatus(String status, Pageable pageable) {
         Page<ProjectResponseDto> searchedProjects = projectRepository.findByStatus(status, pageable);
-        searchedProjects.stream().forEach(projectResponseDto -> {
-            setRemainingRequiredAmount(projectResponseDto);
-            projectResponseDto.setStatus(StatusEnum.valueOf(projectResponseDto.getStatus().toUpperCase()).getStatusDescription());
-        });
+        searchedProjects.stream().forEach(this::setAdditonalDetailsToProjectResponse);
         return searchedProjects;
     }
 }

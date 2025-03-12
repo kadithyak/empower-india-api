@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 
 public class ProjectResponseDto {
@@ -31,6 +33,7 @@ public class ProjectResponseDto {
     private int districtId;
     private String pinCode;
     private Double remainingRequiredAmount;
+    private List<DonarDto> sponsersList;
 
     public ProjectResponseDto(Long id, String projectCategory, Integer projectCategoryId, String projectType
             , Long projectTypeId, String status, String location, Double latitude, Double longitude, Double projectEstimation

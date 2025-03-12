@@ -1,6 +1,7 @@
 package com.andhraempower.dto;
 import com.andhraempower.entity.Donar;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -8,6 +9,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class DonarDto {
 
     private Long id;
@@ -60,6 +62,7 @@ public class DonarDto {
         donar.setMemoryOf(this.memoryOf);
         return donar;
     }
+
 }
 
 

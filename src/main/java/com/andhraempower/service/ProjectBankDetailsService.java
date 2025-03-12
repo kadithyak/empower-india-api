@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import static com.andhraempower.constants.EmpowerConstants.USER_ADMIN;
 import static com.andhraempower.constants.ProjectWorkFlowStatus.BANK_DETAILS_ADDED;
@@ -33,5 +34,9 @@ public class ProjectBankDetailsService {
 
     public ProjectBankDetail updateProject(ProjectBankDetail projectBankDetail) {
         return projectBankDetailsRepository.save(projectBankDetail);
+    }
+
+    public List<ProjectBankDetail> getProjectBankDetails(Long projectId) {
+        return projectBankDetailsRepository.findByProjectId(projectId);
     }
 }

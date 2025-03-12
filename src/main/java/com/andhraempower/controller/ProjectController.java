@@ -21,6 +21,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
 import java.util.List;
+import java.util.Objects;
+
 @CrossOrigin
 @RestController
 @RequestMapping("/api/v1/project")
@@ -44,12 +46,23 @@ public class ProjectController {
             @ApiResponse(responseCode = EmpowerConstants.RESOURCE_NOT_FOUND_CODE, description = EmpowerConstants.RESOURCE_NOT_FOUND_CODE_DESC),
             @ApiResponse(responseCode = EmpowerConstants.UNEXPECTED_SERVER_ERROR_CODE, description = EmpowerConstants.UNEXPECTED_SERVER_ERROR_CODE_DESC)
     })
-    public ResponseEntity<Page<ProjectResponseDto>> getProjects(
+    public ResponseEntity<Page<ProjectResponseDto>> getProjects(@RequestParam(name = "districtId", required = false) Long districtCode
+            , @RequestParam(name = "mandalId", required = false) Long mandalCode, @RequestParam(name = "villageId", required = false) Long villageCode
+            , @RequestParam(name="typeId", required = false) Long projectTypeId, @RequestParam(name="status", required = false) String status,
             @RequestParam(name = "page", defaultValue = "0") int page,
             @RequestParam(name = "size", defaultValue = "10") int size) {
         try {
             Pageable pageable = PageRequest.of(page, size, Sort.unsorted());
-            Page<ProjectResponseDto> projects = projectService.getProjects(pageable);
+            Page<ProjectResponseDto> projects;
+            if(Objects.nonNull(districtCode) || Objects.nonNull(mandalCode) || Objects.nonNull(villageCode)) {
+                projects = projectService.searchProjectsByDistrictMandalVillageCode(districtCode, mandalCode, villageCode,pageable);
+            } else if(Objects.nonNull(projectTypeId)) {
+                projects = projectService.getProjectsByProjectType(projectTypeId,pageable);
+            } else if (Objects.nonNull(status)) {
+                projects = projectService.getProjectsByProjectStatus(status, pageable);
+            } else {
+                projects = projectService.getProjects(pageable);
+            }
             log.debug("Projects Page: {}", projects);
             return ResponseEntity.ok(projects);
         }catch (Exception e){
@@ -126,76 +139,6 @@ public class ProjectController {
         }
     }
 
-    @GetMapping(value = "/search", produces = {EmpowerConstants.APPLICATION_JSON, EmpowerConstants.TEXT_PLAIN})
-    @Operation(summary = "Retrieves a list of all projects.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = EmpowerConstants.SUCCESS_CODE, description = EmpowerConstants.SUCCESS_CODE_DESC),
-            @ApiResponse(responseCode = EmpowerConstants.BAD_REQUEST_CODE, description = EmpowerConstants.BAD_REQUEST_CODE_DESC),
-            @ApiResponse(responseCode = EmpowerConstants.UNAUTHORIZED_CODE, description = EmpowerConstants.UNAUTHORIZED_CODE_DESC),
-            @ApiResponse(responseCode = EmpowerConstants.FORBIDDEN_CODE, description = EmpowerConstants.FORBIDDEN_CODE_DESC),
-            @ApiResponse(responseCode = EmpowerConstants.RESOURCE_NOT_FOUND_CODE, description = EmpowerConstants.RESOURCE_NOT_FOUND_CODE_DESC),
-            @ApiResponse(responseCode = EmpowerConstants.UNEXPECTED_SERVER_ERROR_CODE, description = EmpowerConstants.UNEXPECTED_SERVER_ERROR_CODE_DESC)
-    })
-    public ResponseEntity<Page<ProjectResponseDto>> searchProjects(@RequestParam(name = "districtId") Long districtCode
-            , @RequestParam(name = "mandalId", required = false) Long mandalCode, @RequestParam(name = "villageId", required = false) Long villageCode,
-                                                                   @RequestParam(name = "page", defaultValue = "0") int page,
-                                                                   @RequestParam(name = "size", defaultValue = "10") int size) {
-        try {
-            log.debug("Request received for search project districtId : {}, mandalId : {}, villageId : {}", districtCode, mandalCode, villageCode);
-            Pageable pageable = PageRequest.of(page, size, Sort.unsorted());
-            Page<ProjectResponseDto> projects = projectService.searchProjectsByDistrictMandalVillageCode(districtCode, mandalCode, villageCode,pageable);
-            return ResponseEntity.ok(projects);
-        }catch (Exception e){
-            log.error("Error while searching projects", e);
-            return ResponseEntity.internalServerError().build();
-        }
 
-
-    }
-    @GetMapping(value="/type", produces = {EmpowerConstants.APPLICATION_JSON, EmpowerConstants.TEXT_PLAIN})
-    @Operation(summary = "Retrieves a list of all projects.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = EmpowerConstants.SUCCESS_CODE, description = EmpowerConstants.SUCCESS_CODE_DESC),
-            @ApiResponse(responseCode = EmpowerConstants.BAD_REQUEST_CODE, description = EmpowerConstants.BAD_REQUEST_CODE_DESC),
-            @ApiResponse(responseCode = EmpowerConstants.UNAUTHORIZED_CODE, description = EmpowerConstants.UNAUTHORIZED_CODE_DESC),
-            @ApiResponse(responseCode = EmpowerConstants.FORBIDDEN_CODE, description = EmpowerConstants.FORBIDDEN_CODE_DESC),
-            @ApiResponse(responseCode = EmpowerConstants.RESOURCE_NOT_FOUND_CODE, description = EmpowerConstants.RESOURCE_NOT_FOUND_CODE_DESC),
-            @ApiResponse(responseCode = EmpowerConstants.UNEXPECTED_SERVER_ERROR_CODE, description = EmpowerConstants.UNEXPECTED_SERVER_ERROR_CODE_DESC)
-    })
-    public ResponseEntity<Page<ProjectResponseDto>> getProjectsByType(@RequestParam("typeId") Long projectTypeId,
-                                                                      @RequestParam(name = "page", defaultValue = "0") int page,
-                                                                     @RequestParam(name = "size", defaultValue = "10") int size) {
-        try
-        {
-            Pageable pageable = PageRequest.of(page, size, Sort.unsorted());
-            Page<ProjectResponseDto> projects = projectService.getProjectsByProjectType(projectTypeId,pageable);
-            return ResponseEntity.ok(projects);
-        } catch (Exception e) {
-            return ResponseEntity.internalServerError().build();
-        }
-    }
-
-    @GetMapping(value="/status", produces = {EmpowerConstants.APPLICATION_JSON, EmpowerConstants.TEXT_PLAIN})
-    @Operation(summary = "Retrieves a list of all projects filtered by status.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = EmpowerConstants.SUCCESS_CODE, description = EmpowerConstants.SUCCESS_CODE_DESC),
-            @ApiResponse(responseCode = EmpowerConstants.BAD_REQUEST_CODE, description = EmpowerConstants.BAD_REQUEST_CODE_DESC),
-            @ApiResponse(responseCode = EmpowerConstants.UNAUTHORIZED_CODE, description = EmpowerConstants.UNAUTHORIZED_CODE_DESC),
-            @ApiResponse(responseCode = EmpowerConstants.FORBIDDEN_CODE, description = EmpowerConstants.FORBIDDEN_CODE_DESC),
-            @ApiResponse(responseCode = EmpowerConstants.RESOURCE_NOT_FOUND_CODE, description = EmpowerConstants.RESOURCE_NOT_FOUND_CODE_DESC),
-            @ApiResponse(responseCode = EmpowerConstants.UNEXPECTED_SERVER_ERROR_CODE, description = EmpowerConstants.UNEXPECTED_SERVER_ERROR_CODE_DESC)
-    })
-    public ResponseEntity<Page<ProjectResponseDto>> getProjectsByStatus(@RequestParam("status") String status,
-                                                                        @RequestParam(name = "page", defaultValue = "0") int page,
-                                                                       @RequestParam(name = "size", defaultValue = "10") int size)  {
-        try
-            {
-                Pageable pageable = PageRequest.of(page, size, Sort.unsorted());
-                Page<ProjectResponseDto> projects = projectService.getProjectsByProjectStatus(status, pageable);
-                return ResponseEntity.ok(projects);
-            } catch (Exception e) {
-            return ResponseEntity.internalServerError().build();
-        }
-    }
 
 }
