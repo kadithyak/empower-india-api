@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 
 public class ProjectResponseDto {
@@ -31,12 +33,16 @@ public class ProjectResponseDto {
     private int districtId;
     private String pinCode;
     private Double remainingRequiredAmount;
+    private List<DonarDto> sponsersList;
+    private boolean isCommitteeAdded;
+    private boolean isBankDetailsAdded;
+    private boolean isEstimationAdded;
 
     public ProjectResponseDto(Long id, String projectCategory, Integer projectCategoryId, String projectType
             , Long projectTypeId, String status, String location, Double latitude, Double longitude, Double projectEstimation
             , Double governmentShare, Double publicShare, Boolean isNew, String description, String createdBy
             , String lastUpdatedBy, String villageName, int villageId, String mandalName, int mandalId, String districtName
-            , int districtId, String pinCode) {
+            , int districtId, String pinCode, boolean isCommitteeAdded, boolean isBankDetailsAdded, boolean isEstimationAdded) {
         this.id = id;
         this.projectCategory = projectCategory;
         this.projectCategoryId = projectCategoryId;
@@ -60,6 +66,9 @@ public class ProjectResponseDto {
         this.districtName = districtName;
         this.districtId = districtId;
         this.pinCode = pinCode;
+        this.isCommitteeAdded = isCommitteeAdded;
+        this.isBankDetailsAdded = isBankDetailsAdded;
+        this.isEstimationAdded = isEstimationAdded;
     }
 
     public ProjectResponseDto(Long id, String projectCategory, Integer projectCategoryId, String projectType
