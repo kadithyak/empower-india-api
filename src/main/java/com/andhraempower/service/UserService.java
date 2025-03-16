@@ -44,6 +44,10 @@ public class UserService {
             throw new UserAlreadyExistsException("Email already exists. Please choose another one.");
         }
 
+        if (userRepository.existsByPhoneNumber(userRequestDto.getPhoneNumber())) {
+            throw new UserAlreadyExistsException("PhoneNumber already exists. Please choose another one.");
+        }
+
 
         User user = new User();
         user.setFirstName(userRequestDto.getFirstName());
