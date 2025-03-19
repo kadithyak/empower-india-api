@@ -2,6 +2,8 @@ package com.andhraempower.dto;
 
 import lombok.*;
 
+import java.time.LocalDate;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -27,4 +29,8 @@ public class ProjectRequestDto {
     private Double publicShare;
     private String description;
     private String statusCode;
+    private LocalDate estimateStartDate;
+    private LocalDate estimateEndDate;
+    private LocalDate actualStartDate;
+    private LocalDate actualEndDate;
 }

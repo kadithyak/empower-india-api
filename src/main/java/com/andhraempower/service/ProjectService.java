@@ -119,6 +119,10 @@ public class ProjectService {
         villageProject.setProjectEstimation(projectRequestDto.getProjectEstimation());
         villageProject.setPublicShare(projectRequestDto.getPublicShare());
         villageProject.setDescription(projectRequestDto.getDescription());
+        villageProject.setEstimateStartDate(projectRequestDto.getEstimateStartDate());
+        villageProject.setEstimateEndDate(projectRequestDto.getEstimateEndDate());
+        villageProject.setActualStartDate(projectRequestDto.getActualStartDate());
+        villageProject.setActualEndDate(projectRequestDto.getActualEndDate());
 
         if(!villageProject.getVillage().getId().equals(projectRequestDto.getVillageId())) {
             Optional<VillageLookup> villageLookup = getVillageLookup(projectRequestDto.getVillageId());
@@ -164,6 +168,10 @@ public class ProjectService {
                 .status("Open")
                 .createdBy("Admin")
                 .lastUpdatedBy("Admin")
+                .estimateStartDate(projectRequestDto.getEstimateStartDate())
+                .estimateEndDate(projectRequestDto.getEstimateEndDate())
+                .actualStartDate(projectRequestDto.getActualStartDate())
+                .actualEndDate(projectRequestDto.getActualEndDate())
                 .build();
     }
 

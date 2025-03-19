@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.context.annotation.Lazy;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Entity
@@ -75,6 +76,18 @@ public class VillageProject {
 
     @Column(name = "is_estimation_completed")
     private boolean estimationCompleted;
+
+    @Column(name = "estimate_start_date")
+    private LocalDate estimateStartDate;
+
+    @Column(name = "estimate_end_date")
+    private LocalDate estimateEndDate;
+
+    @Column(name = "actual_start_date")
+    private LocalDate actualStartDate;
+
+    @Column(name = "actual_end_date")
+    private LocalDate actualEndDate;
 
     @OneToMany
     @JoinColumn(name = "village_project_id")
