@@ -56,8 +56,8 @@ public class ProjectController {
         try {
             Pageable pageable = PageRequest.of(page, size, Sort.unsorted());
             Page<ProjectResponseDto> projects;
-            if(Objects.nonNull(districtCode) || Objects.nonNull(mandalCode) || Objects.nonNull(villageCode)) {
-                projects = projectService.searchProjectsByDistrictMandalVillageCode(districtCode, mandalCode, villageCode,pageable);
+            if(Objects.nonNull(status) || Objects.nonNull(projectTypeId) || Objects.nonNull(districtCode) || Objects.nonNull(mandalCode) || Objects.nonNull(villageCode)) {
+                projects = projectService.searchProjects(districtCode, mandalCode, villageCode,projectTypeId,status,pageable);
             } else if(Objects.nonNull(projectTypeId)) {
                 projects = projectService.getProjectsByProjectType(projectTypeId,pageable);
             } else if (Objects.nonNull(status)) {

@@ -103,9 +103,9 @@ public class ProjectService {
         }
     }
 
-    public Page<ProjectResponseDto> searchProjectsByDistrictMandalVillageCode(Long districtCode, Long mandalCode, Long villageCode, Pageable pageable) {
+    public Page<ProjectResponseDto> searchProjects(Long districtCode, Long mandalCode, Long villageCode,Long id, String statusCode, Pageable pageable) {
         log.info("searchProjectsByDistrictMandalVillageCode districtCode {}, mandalCode{}, villageCode {}", districtCode, mandalCode, villageCode);
-        Page<ProjectResponseDto> searchedProjects = projectRepository.searchProjects(districtCode, mandalCode, villageCode, pageable);
+        Page<ProjectResponseDto> searchedProjects = projectRepository.searchProjects(districtCode, mandalCode, villageCode,id,statusCode, pageable);
         searchedProjects.stream().forEach(this::setAdditonalDetailsToProjectResponse);
         return searchedProjects;
     }
