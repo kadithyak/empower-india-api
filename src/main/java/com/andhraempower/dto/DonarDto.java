@@ -29,6 +29,7 @@ public class DonarDto {
     private String memoryOf;
     private String modeOfPayment;
     private String description;
+    private String imageUrl;
   
     public DonarDto(Long id, String firstName, String lastName, String phoneNumber, String email, String description,
     String address,  
