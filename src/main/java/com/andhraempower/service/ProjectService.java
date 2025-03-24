@@ -88,7 +88,7 @@ public class ProjectService {
                 DonarDto.DonarDtoBuilder donarDtoBuilder = DonarDto.builder().id(donar.getId())
                         .firstName(donar.getDonar().getFirstName()).lastName(donar.getDonar().getLastName())
                         .phoneNumber(donar.getDonar().getPhoneNumber()).email(donar.getDonar().getEmail())
-                        .address(donar.getDonar().getAddress()).amount(donar.getAmount()).memoryOf(donar.getDonar().getMemoryOf()).modeOfPayment(donar.getModeOfPayment());
+                        .address(donar.getDonar().getAddress()).amount(donar.getAmount()).modeOfPayment(donar.getModeOfPayment());
                 if(donar.getDonar().getVillage() != null) {
                     donarDtoBuilder.villageId(donar.getDonar().getVillage().getId()).villageName(donar.getDonar().getVillage().getName());
                 }

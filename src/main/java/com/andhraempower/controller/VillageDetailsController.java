@@ -23,8 +23,8 @@ public class VillageDetailsController {
     private VillageDetailsService villageDetailsService;
 
 
-    @GetMapping(name = "/details")
-    @Operation(summary = "Fetches Village Details.")
+    @GetMapping("/{villageId}")
+    @Operation(summary = "Fetches Village Details by ID.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = EmpowerConstants.SUCCESS_CODE, description = EmpowerConstants.SUCCESS_CODE_DESC),
             @ApiResponse(responseCode = EmpowerConstants.BAD_REQUEST_CODE, description = EmpowerConstants.BAD_REQUEST_CODE_DESC),
@@ -33,12 +33,12 @@ public class VillageDetailsController {
             @ApiResponse(responseCode = EmpowerConstants.RESOURCE_NOT_FOUND_CODE, description = EmpowerConstants.RESOURCE_NOT_FOUND_CODE_DESC),
             @ApiResponse(responseCode = EmpowerConstants.UNEXPECTED_SERVER_ERROR_CODE, description = EmpowerConstants.UNEXPECTED_SERVER_ERROR_CODE_DESC)
     })
-    public VillageDemographics getVillageDetails(@RequestParam("villageId") Integer villageId) {
+    public VillageDemographics getVillageDetails(@PathVariable Integer villageId) {
         return villageDetailsService.getVillageDetails(villageId);
     }
 
-    @PostMapping(name = "/details")
-    @Operation(summary = "Add Village Details.")
+    @PostMapping
+    @Operation(summary = "Add New Village Details.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = EmpowerConstants.SUCCESS_CODE, description = EmpowerConstants.SUCCESS_CODE_DESC),
             @ApiResponse(responseCode = EmpowerConstants.BAD_REQUEST_CODE, description = EmpowerConstants.BAD_REQUEST_CODE_DESC),
@@ -49,5 +49,20 @@ public class VillageDetailsController {
     })
     public VillageDemographics addVillageDetails(@RequestBody VillageDemographics villageDemographics) {
         return villageDetailsService.addVillageDetails(villageDemographics);
+    }
+
+    @PutMapping("/{villageId}")
+    @Operation(summary = "Update Village Details by ID.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = EmpowerConstants.SUCCESS_CODE, description = EmpowerConstants.SUCCESS_CODE_DESC),
+            @ApiResponse(responseCode = EmpowerConstants.BAD_REQUEST_CODE, description = EmpowerConstants.BAD_REQUEST_CODE_DESC),
+            @ApiResponse(responseCode = EmpowerConstants.UNAUTHORIZED_CODE, description = EmpowerConstants.UNAUTHORIZED_CODE_DESC),
+            @ApiResponse(responseCode = EmpowerConstants.FORBIDDEN_CODE, description = EmpowerConstants.FORBIDDEN_CODE_DESC),
+            @ApiResponse(responseCode = EmpowerConstants.RESOURCE_NOT_FOUND_CODE, description = EmpowerConstants.RESOURCE_NOT_FOUND_CODE_DESC),
+            @ApiResponse(responseCode = EmpowerConstants.UNEXPECTED_SERVER_ERROR_CODE, description = EmpowerConstants.UNEXPECTED_SERVER_ERROR_CODE_DESC)
+    })
+    public VillageDemographics updateVillageDetails(@PathVariable Integer villageId, @RequestBody VillageDemographics villageDemographics) {
+        villageDemographics.setVillageId(villageId);
+        return villageDetailsService.updateVillageDetails(villageDemographics);
     }
 }

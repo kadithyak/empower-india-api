@@ -9,4 +9,6 @@ public interface VillageDetailsRepository extends JpaRepository<VillageDemograph
 
     VillageDemographics findByVillageId(Integer villageId);
 
+    VillageDemographics findById(Integer id);
+
 }
