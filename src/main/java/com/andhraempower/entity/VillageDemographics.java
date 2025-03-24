@@ -1,11 +1,18 @@
 package com.andhraempower.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Table(name = "village_demographics")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class VillageDemographics {
 
     @Id
@@ -18,36 +25,36 @@ public class VillageDemographics {
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "village_id")
-    private List<PopulationVillage> populations;
+    private List<PopulationVillage> populations = new ArrayList<>();
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "village_id")
-    private List<UnemployeeYouthVillage> unEmployedYouthVillage;
+    private List<UnemployeeYouthVillage> unEmployedYouthVillage = new ArrayList<>();
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "village_id")
-    private List<EmployeeYouthVillage> employedYouthVillage;
+    private List<EmployeeYouthVillage> employedYouthVillage = new ArrayList<>();
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "village_id")
-    private List<OccupationVillage> occupations;
+    private List<OccupationVillage> occupations = new ArrayList<>();
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "village_id")
-    private List<LandUtilizationVillage> landUtilizationVillage;
+    private List<LandUtilizationVillage> landUtilizationVillage = new ArrayList<>();
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "village_id")
-    private List<CultivationCropsVillage> cultivationCropsVillage;
+    private List<CultivationCropsVillage> cultivationCropsVillage = new ArrayList<>();
 
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "village_id")
-    private List<LiveStockVillage> liveStockVillages;
+    private List<LiveStockVillage> liveStockVillages = new ArrayList<>();
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "village_id")
-    private List<InstitutionsVillage> institutionsVillages;
+    private List<InstitutionsVillage> institutionsVillages = new ArrayList<>();
 
 
     @Column(name = "no_of_houses")

@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -33,8 +34,8 @@ public class VillageDetailsController {
             @ApiResponse(responseCode = EmpowerConstants.RESOURCE_NOT_FOUND_CODE, description = EmpowerConstants.RESOURCE_NOT_FOUND_CODE_DESC),
             @ApiResponse(responseCode = EmpowerConstants.UNEXPECTED_SERVER_ERROR_CODE, description = EmpowerConstants.UNEXPECTED_SERVER_ERROR_CODE_DESC)
     })
-    public VillageDemographics getVillageDetails(@PathVariable Integer villageId) {
-        return villageDetailsService.getVillageDetails(villageId);
+    public ResponseEntity<VillageDemographics> getVillageDetails(@PathVariable Integer villageId) {
+        return ResponseEntity.ok(villageDetailsService.getVillageDetails(villageId) != null ? villageDetailsService.getVillageDetails(villageId) : new VillageDemographics());
     }
 
     @PostMapping
