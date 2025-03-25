@@ -49,6 +49,9 @@ public class VillageDetailsController {
             @ApiResponse(responseCode = EmpowerConstants.UNEXPECTED_SERVER_ERROR_CODE, description = EmpowerConstants.UNEXPECTED_SERVER_ERROR_CODE_DESC)
     })
     public VillageDemographics addVillageDetails(@RequestBody VillageDemographics villageDemographics) {
+        if (villageDemographics.getId() != null) {
+            return villageDetailsService.updateVillageDetails(villageDemographics);
+        }
         return villageDetailsService.addVillageDetails(villageDemographics);
     }
 
