@@ -2,8 +2,7 @@ package com.andhraempower.controller;
 
 import com.andhraempower.constants.EmpowerConstants;
 import com.andhraempower.dto.DonarDto;
-import com.andhraempower.dto.DonarInfoDto;
-import com.andhraempower.dto.ProjectCategoriesDto;
+import com.andhraempower.dto.ProjectInfoDto;
 import com.andhraempower.entity.Donar;
 import com.andhraempower.service.DonarsService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -41,7 +40,7 @@ public class DonarsController {
         log.debug("Adding Donar {} and project Id {}", donars, projectId);
         try {
             final Donar donar = donarsService.addDonars(donars);
-            Optional.ofNullable(projectId).ifPresent(id -> donarsService.associateDonarToProject(id, donar, donars.getAmount(), donars.getModeOfPayment()));
+            Optional.ofNullable(projectId).ifPresent(id -> donarsService.associateDonarToProject(id, donar, donars.getAmount(), donars.getModeOfPayment(), donars.getMemoryOf()));
             return ResponseEntity.ok(donar);
         }catch (Exception e){
             log.error("Exception while adding committee member", e);
@@ -123,7 +122,7 @@ public class DonarsController {
 
    
     // Fetch Donar by firstName, lastName, phoneNumber, email, address
-    @PostMapping(value = "/donar-project",produces = {EmpowerConstants.APPLICATION_JSON})
+    @GetMapping(value = "/donar-project/{donarId}",produces = {EmpowerConstants.APPLICATION_JSON})
     @Operation(summary = "Fetch Donar by firstName, lastName, phoneNumber, email, address")
     @ApiResponses(value = {
             @ApiResponse(responseCode = EmpowerConstants.SUCCESS_CODE, description = EmpowerConstants.SUCCESS_CODE_DESC),
@@ -133,8 +132,8 @@ public class DonarsController {
             @ApiResponse(responseCode = EmpowerConstants.RESOURCE_NOT_FOUND_CODE, description = EmpowerConstants.RESOURCE_NOT_FOUND_CODE_DESC),
             @ApiResponse(responseCode = EmpowerConstants.UNEXPECTED_SERVER_ERROR_CODE, description = EmpowerConstants.UNEXPECTED_SERVER_ERROR_CODE_DESC)
     })
-    public ResponseEntity<List<DonarInfoDto>> getDonar(@RequestBody Donar donar) {
-        return ResponseEntity.ok().body(donarsService.getDonar(donar));
+    public ResponseEntity<List<ProjectInfoDto>> getDonar(@PathVariable("donarId") Long donarId) {
+        return ResponseEntity.ok().body(donarsService.getDonar(donarId));
     }
 
     /**

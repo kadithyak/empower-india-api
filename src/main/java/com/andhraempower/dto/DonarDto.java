@@ -28,17 +28,21 @@ public class DonarDto {
     private String districtName;
     private String memoryOf;
     private String modeOfPayment;
+    private String description;
+    private String imageUrl;
   
-    public DonarDto(String firstName, String lastName, String phoneNumber, String email, 
+    public DonarDto(Long id, String firstName, String lastName, String phoneNumber, String email, String description,
     String address,  
     Integer villageId, String villageName,
     Integer mandalId, String mandalName,
     Integer districtId, String districtName,
     Double amount, String category) {
+        this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.phoneNumber = phoneNumber;
         this.email = email;
+        this.description = description;
         this.address = address;
         this.villageId = villageId;
         this.villageName = villageName;
@@ -48,7 +52,6 @@ public class DonarDto {
         this.districtName = districtName;
         this.amount = amount;
         this.category = category;
-
     }
 
     public Donar fromDto(){
@@ -59,7 +62,7 @@ public class DonarDto {
         donar.setPhoneNumber(this.phoneNumber);
         donar.setEmail(this.email);
         donar.setAddress(this.address);
-        donar.setMemoryOf(this.memoryOf);
+        donar.setDescription(this.description);
         return donar;
     }
 

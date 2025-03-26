@@ -33,10 +33,10 @@ public class Donar extends Audit {
     private String email;
 
     @Column(name = "address")
-    private String address;
+    private String address;    
 
-    @Column(name = "memory_of")
-    private String memoryOf;
+    @Column(name = "description")
+    private String description;
 
     @ManyToOne
     @JoinColumn(name = "village_id")

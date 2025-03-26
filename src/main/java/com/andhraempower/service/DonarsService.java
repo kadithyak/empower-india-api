@@ -1,10 +1,8 @@
 package com.andhraempower.service;
 
-import com.andhraempower.constants.ProjectWorkFlowStatus;
-import com.andhraempower.constants.StatusEnum;
 import com.andhraempower.dao.LookupDAO;
 import com.andhraempower.dto.DonarDto;
-import com.andhraempower.dto.DonarInfoDto;
+import com.andhraempower.dto.ProjectInfoDto;
 import com.andhraempower.entity.*;
 import com.andhraempower.events.StatusChangeEvent;
 import com.andhraempower.events.StatusChangePublisher;
@@ -59,13 +57,14 @@ public class DonarsService {
         return donarsRepository.save(donar);
     }
 
-    public void associateDonarToProject(Long projectId, Donar donar, Double amount, String modeOfPayment){
+    public void associateDonarToProject(Long projectId, Donar donar, Double amount, String modeOfPayment, String memoryOf){
         Optional.ofNullable(projectId).ifPresent(id -> {
             VillageProjectDonar villageProjectDonar = new VillageProjectDonar();
             villageProjectDonar.setDonar(donar);
             villageProjectDonar.setVillageProjectId(projectId);
             villageProjectDonar.setAmount(amount);
             villageProjectDonar.setModeOfPayment(modeOfPayment);
+            villageProjectDonar.setMemoryOf(memoryOf);
             villageProjectDonar.setCreatedBy(USER_ADMIN);
             villageProjectDonarRepository.save(villageProjectDonar);
             statusChangePublisher.publishStatusChange(new StatusChangeEvent(projectId, SPONSOR_ADDED, USER_ADMIN, LocalDateTime.now()));
@@ -95,8 +94,8 @@ public List<DonarDto> getDonars(Integer topN) {
         return donarsRepository.findDonars(pageable);
     }
 
-    public List<DonarInfoDto> getDonar(Donar donar) {
-        return donarsRepository.findDonar(donar.getFirstName(), donar.getLastName(), donar.getPhoneNumber(), donar.getEmail(), donar.getAddress());
+    public List<ProjectInfoDto> getDonar(Long donarId) {
+        return donarsRepository.findDonar(donarId);
     }
 
     public List<DonarDto> searchDonors(String searchTerm) {
