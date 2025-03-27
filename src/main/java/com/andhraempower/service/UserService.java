@@ -3,6 +3,7 @@ package com.andhraempower.service;
 import com.andhraempower.dto.LoginRequestDto;
 import com.andhraempower.dto.UserRequestDto;
 import com.andhraempower.dto.UserResponseDto;
+import com.andhraempower.entity.Role;
 import com.andhraempower.entity.User;
 import com.andhraempower.exception.InvalidCredentialsException;
 import com.andhraempower.exception.UserAlreadyExistsException;
@@ -11,7 +12,9 @@ import com.andhraempower.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -57,6 +60,11 @@ public class UserService {
         user.setUserName(userRequestDto.getUserName());
         user.setPassword(userRequestDto.getPassword());
         user.setAboutYourSelf(userRequestDto.getAboutYourSelf());
+        List<Role> roles = userRequestDto.getRoles().stream()
+                .map(role -> new Role(role.getId(), role.getName()))
+                .collect(Collectors.toList());
+        user.setRoles(roles);
+
 
         return userRepository.save(user);
     }
