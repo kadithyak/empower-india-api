@@ -11,7 +11,6 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
 @Entity
 @Table(name = "donar")
 public class Donar extends Audit {
@@ -33,7 +32,7 @@ public class Donar extends Audit {
     private String email;
 
     @Column(name = "address")
-    private String address;    
+    private String address;
 
     @Column(name = "description")
     private String description;

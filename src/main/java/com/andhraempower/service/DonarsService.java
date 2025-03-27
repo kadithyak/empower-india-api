@@ -1,6 +1,7 @@
 package com.andhraempower.service;
 
 import com.andhraempower.dao.LookupDAO;
+import com.andhraempower.dto.DonarAndProjectInfoDto;
 import com.andhraempower.dto.DonarDto;
 import com.andhraempower.dto.ProjectInfoDto;
 import com.andhraempower.entity.*;
@@ -34,7 +35,7 @@ public class DonarsService {
 
     @Autowired
     private DonarsRepository donarsRepository;
-    
+
     @Autowired
     private LookupDAO lookupDAO;
 
@@ -89,39 +90,15 @@ public class DonarsService {
         villageProjectDonarRepository.deleteByIdAndVillageProjectId(committeeId, projectId);
     }
 
-public List<DonarDto> getDonars(Integer topN) {
+    public List<DonarDto> getDonars(Integer topN) {
         Pageable pageable = (topN != null && topN > 0) ? PageRequest.of(0, topN) : Pageable.unpaged();
         return donarsRepository.findDonars(pageable);
     }
 
-    public List<ProjectInfoDto> getDonar(Long donarId) {
-        return donarsRepository.findDonar(donarId);
-    }
-
-    public List<DonarDto> searchDonors(String searchTerm) {
-        return convertToDTOList(donarsRepository.searchDonors(searchTerm));
-
-
-    }
-
-    public List<DonarDto> convertToDTOList(List<Donar> donars) {
-        return donars.stream()
-                .map(this::convertToDTO)
-                .collect(Collectors.toList());
-    }
-
-    public DonarDto convertToDTO(Donar donar) {
-        if (donar == null) {
-            return null;
-        }
-        return DonarDto.builder()
-                .id(donar.getId())
-                .firstName(donar.getFirstName())
-                .lastName(donar.getLastName())
-                .phoneNumber(donar.getPhoneNumber())
-                .email(donar.getEmail())
-                .address(donar.getAddress())
-                .memoryOf(donar.getMemoryOf())
-                .build();
+    public DonarAndProjectInfoDto getDonarInfo(Long donarId) {
+        DonarAndProjectInfoDto donarAndProjectInfo = new DonarAndProjectInfoDto();
+        donarAndProjectInfo.setDonarInfo(donarsRepository.findDonarInfo(donarId));
+        donarAndProjectInfo.setProjectsInfo(donarsRepository.findProjectInfo(donarId));
+        return donarAndProjectInfo;
     }
 }

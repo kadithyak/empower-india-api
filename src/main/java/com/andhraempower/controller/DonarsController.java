@@ -1,6 +1,7 @@
 package com.andhraempower.controller;
 
 import com.andhraempower.constants.EmpowerConstants;
+import com.andhraempower.dto.DonarAndProjectInfoDto;
 import com.andhraempower.dto.DonarDto;
 import com.andhraempower.dto.ProjectInfoDto;
 import com.andhraempower.entity.Donar;
@@ -120,30 +121,10 @@ public class DonarsController {
         return ResponseEntity.ok().body(donarsService.getDonars(topN));
     }
 
-   
-    // Fetch Donar by firstName, lastName, phoneNumber, email, address
-    @GetMapping(value = "/donar-project/{donarId}",produces = {EmpowerConstants.APPLICATION_JSON})
-    @Operation(summary = "Fetch Donar by firstName, lastName, phoneNumber, email, address")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = EmpowerConstants.SUCCESS_CODE, description = EmpowerConstants.SUCCESS_CODE_DESC),
-            @ApiResponse(responseCode = EmpowerConstants.BAD_REQUEST_CODE, description = EmpowerConstants.BAD_REQUEST_CODE_DESC),
-            @ApiResponse(responseCode = EmpowerConstants.UNAUTHORIZED_CODE, description = EmpowerConstants.UNAUTHORIZED_CODE_DESC),
-            @ApiResponse(responseCode = EmpowerConstants.FORBIDDEN_CODE, description = EmpowerConstants.FORBIDDEN_CODE_DESC),
-            @ApiResponse(responseCode = EmpowerConstants.RESOURCE_NOT_FOUND_CODE, description = EmpowerConstants.RESOURCE_NOT_FOUND_CODE_DESC),
-            @ApiResponse(responseCode = EmpowerConstants.UNEXPECTED_SERVER_ERROR_CODE, description = EmpowerConstants.UNEXPECTED_SERVER_ERROR_CODE_DESC)
-    })
-    public ResponseEntity<List<ProjectInfoDto>> getDonar(@PathVariable("donarId") Long donarId) {
-        return ResponseEntity.ok().body(donarsService.getDonar(donarId));
-    }
 
-    /**
-     * API to search for donors based on the provided search term.
-     *
-     * @param searchTerm The search term that will be matched against multiple donor fields.
-     * @return List of donors matching the search term.
-     */
-    @GetMapping("/search")
-    @Operation(summary = "Search Donar by firstName, lastName, phoneNumber, email")
+    // Fetch Donar by donarId
+    @GetMapping(value = "/donar-project-info/{donarId}",produces = {EmpowerConstants.APPLICATION_JSON})
+    @Operation(summary = "Fetch Donar by donarId")
     @ApiResponses(value = {
             @ApiResponse(responseCode = EmpowerConstants.SUCCESS_CODE, description = EmpowerConstants.SUCCESS_CODE_DESC),
             @ApiResponse(responseCode = EmpowerConstants.BAD_REQUEST_CODE, description = EmpowerConstants.BAD_REQUEST_CODE_DESC),
@@ -152,8 +133,8 @@ public class DonarsController {
             @ApiResponse(responseCode = EmpowerConstants.RESOURCE_NOT_FOUND_CODE, description = EmpowerConstants.RESOURCE_NOT_FOUND_CODE_DESC),
             @ApiResponse(responseCode = EmpowerConstants.UNEXPECTED_SERVER_ERROR_CODE, description = EmpowerConstants.UNEXPECTED_SERVER_ERROR_CODE_DESC)
     })
-    public ResponseEntity<List<DonarDto>> searchDonors(@RequestParam String searchTerm) {
-        return ResponseEntity.ok().body(donarsService.searchDonors(searchTerm));
+    public ResponseEntity<DonarAndProjectInfoDto> getDonarInfo(@PathVariable("donarId") Long donarId) {
+        return ResponseEntity.ok().body(donarsService.getDonarInfo(donarId));
     }
 
 }
