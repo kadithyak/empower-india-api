@@ -107,6 +107,22 @@ public class VillageDetailsService {
             existingVillage.setLongitude(updatedVillage.getLongitude());
         }
 
+        if (updatedVillage.getPinCode()!= null) {
+            existingVillage.setPinCode(updatedVillage.getPinCode());
+        }
+
+        if (updatedVillage.getAbove60Male() != null) {
+            existingVillage.setAbove60Male(updatedVillage.getAbove60Male());
+        }
+
+        if (updatedVillage.getAbove60Female() != null) {
+            existingVillage.setAbove60Female(updatedVillage.getAbove60Female());
+        }
+
+        if (updatedVillage.getGeographicalArea() != null) {
+            existingVillage.setGeographicalArea(updatedVillage.getGeographicalArea());
+        }
+
         if (updatedVillage.getPopulations() != null && !updatedVillage.getPopulations().isEmpty()) {
             for (PopulationVillage updatedPopulation : updatedVillage.getPopulations()) {
                 if (updatedPopulation.getId() != null) {
