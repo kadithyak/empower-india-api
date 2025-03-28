@@ -11,7 +11,9 @@ import com.andhraempower.exception.UserNotFoundException;
 import com.andhraempower.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -37,7 +39,7 @@ public class UserService {
         return new UserResponseDto(user);
     }
 
-    public User createUser(UserRequestDto userRequestDto) {
+    public User createUser(UserRequestDto userRequestDto, MultipartFile file) throws IOException {
 
         if (userRepository.existsByUserName(userRequestDto.getUserName())) {
             throw new UserAlreadyExistsException("Username already exists. Please choose another one.");
@@ -60,11 +62,15 @@ public class UserService {
         user.setUserName(userRequestDto.getUserName());
         user.setPassword(userRequestDto.getPassword());
         user.setAboutYourSelf(userRequestDto.getAboutYourSelf());
-        List<Role> roles = userRequestDto.getRoles().stream()
-                .map(role -> new Role(role.getId(), role.getName()))
-                .collect(Collectors.toList());
-        user.setRoles(roles);
-
+        if (!userRequestDto.getRoles().isEmpty()) {
+            List<Role> roles = userRequestDto.getRoles().stream()
+                    .map(role -> new Role(role.getId(), role.getName()))
+                    .collect(Collectors.toList());
+            user.setRoles(roles);
+        }
+        if (file != null && !file.isEmpty()) {
+            user.setProfilePhoto(file.getBytes());
+        }
 
         return userRepository.save(user);
     }

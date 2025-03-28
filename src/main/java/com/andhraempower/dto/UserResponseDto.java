@@ -27,6 +27,8 @@ public class UserResponseDto {
 
     private List<RoleDto> roles;
 
+    private byte[] profilePhoto;
+
     public UserResponseDto(User user) {
         this.id = user.getId();
         this.firstName = user.getFirstName();
@@ -41,6 +43,8 @@ public class UserResponseDto {
         } else {
             this.roles = List.of();
         }
+        this.profilePhoto = user.getProfilePhoto();
+
     }
 
 }

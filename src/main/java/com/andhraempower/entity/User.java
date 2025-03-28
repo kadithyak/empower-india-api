@@ -43,6 +43,10 @@ public class User extends Audit{
     @Column(name = "about_your_self")
     private String aboutYourSelf;
 
+    @Lob
+    @Column(name = "profile_photo", columnDefinition = "LONGBLOB")
+    private byte[] profilePhoto;
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
         name = "user_roles",

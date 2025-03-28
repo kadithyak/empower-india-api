@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -18,6 +19,7 @@ public class UserRequestDto {
     private String userName;
     private String password;
     private String aboutYourSelf;
-    private List<RoleDto> roles;
+    private List<RoleDto> roles = new ArrayList<>();
+
 
 }
