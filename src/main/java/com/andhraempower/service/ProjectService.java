@@ -96,7 +96,9 @@ public class ProjectService {
             }).toList();
             projectResponseDto.setSponsersList(sponserList);
             sponsereddAmount = byVillageProjectId.stream().mapToDouble(VillageProjectDonar::getAmount).sum();
-            projectResponseDto.setRemainingRequiredAmount(projectResponseDto.getProjectEstimation() - sponsereddAmount);
+            if(projectResponseDto.getProjectEstimation() != null) {
+                projectResponseDto.setRemainingRequiredAmount(projectResponseDto.getProjectEstimation() - sponsereddAmount);
+            }
         } else {
             projectResponseDto.setRemainingRequiredAmount(projectResponseDto.getProjectEstimation());
             projectResponseDto.setSponsersList(new ArrayList<>());
