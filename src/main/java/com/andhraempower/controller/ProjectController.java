@@ -187,6 +187,26 @@ public class ProjectController {
         }
     }
 
-
+    @PostMapping("/kick-off/{projectId}")
+    @Operation(summary = "Kick off to Work in progress. all the steps should be completed")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = EmpowerConstants.SUCCESS_CODE, description = "Project Updated successfully"),
+            @ApiResponse(responseCode = EmpowerConstants.BAD_REQUEST_CODE, description = "Invalid request data"),
+            @ApiResponse(responseCode = EmpowerConstants.UNAUTHORIZED_CODE, description = EmpowerConstants.UNAUTHORIZED_CODE_DESC),
+            @ApiResponse(responseCode = EmpowerConstants.FORBIDDEN_CODE, description = EmpowerConstants.FORBIDDEN_CODE_DESC),
+            @ApiResponse(responseCode = EmpowerConstants.RESOURCE_NOT_FOUND_CODE, description = EmpowerConstants.RESOURCE_NOT_FOUND_CODE_DESC),
+            @ApiResponse(responseCode = EmpowerConstants.UNEXPECTED_SERVER_ERROR_CODE, description = "Server error while saving project")
+    })
+    public ResponseEntity<String> kickOffProject(@PathVariable("projectId") Long projectId) {
+        try {
+            projectService.kickOffProject(projectId);
+            return ResponseEntity.ok("Successfully published");
+        } catch (IllegalArgumentException e) {
+            log.error("Error while publishing project status steps ", e);
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().build();
+        }
+    }
 
 }

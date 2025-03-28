@@ -8,6 +8,7 @@ import com.andhraempower.events.StatusChangeEvent;
 import com.andhraempower.events.StatusChangePublisher;
 import com.andhraempower.repository.ProjectRepository;
 import com.andhraempower.repository.VillageProjectDonarRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -228,5 +229,17 @@ public class ProjectService {
                     projectRepository.save(villageProject);
                 }, () -> {throw new IllegalArgumentException("Project not found for the project id "+ projectId);});
 
+    }
+
+    public void kickOffProject(Long projectId) {
+        Optional.ofNullable(projectRepository.findById(projectId))
+                .ifPresentOrElse(project -> {
+                    VillageProject villageProject = project.get();
+                    villageProject.setStatusCode(StatusEnum.WIP.name());
+                    villageProject.setStatus(StatusEnum.WIP.name());
+                    projectRepository.save(villageProject);
+                }, () -> {
+                    throw new EntityNotFoundException("Project not found for the project id " + projectId);
+                });
     }
 }
