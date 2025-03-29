@@ -123,6 +123,10 @@ public class VillageDetailsService {
             existingVillage.setGeographicalArea(updatedVillage.getGeographicalArea());
         }
 
+        if (updatedVillage.getBoundariesVillage() != null) {
+            existingVillage.setBoundariesVillage(updatedVillage.getBoundariesVillage());
+        }
+
         if (updatedVillage.getPopulations() != null && !updatedVillage.getPopulations().isEmpty()) {
             for (PopulationVillage updatedPopulation : updatedVillage.getPopulations()) {
                 if (updatedPopulation.getId() != null) {
