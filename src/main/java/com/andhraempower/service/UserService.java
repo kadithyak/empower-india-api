@@ -11,6 +11,7 @@ import com.andhraempower.exception.UserNotFoundException;
 import com.andhraempower.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -133,8 +134,8 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public List<UserResponseDto> getAllUsers(String firstName, String lastName, String phoneNumber, String email, Integer districtId, Integer roleId) {
-        return userRepository.findUsers(firstName, lastName, phoneNumber, email, districtId, roleId).stream().map(UserResponseDto::new).collect(Collectors.toList());
+    public List<UserResponseDto> getAllUsers(String searchTerm,Long districtId, Long roleId) {
+        return userRepository.findUsers(searchTerm, districtId, roleId).stream().map(UserResponseDto::new).collect(Collectors.toList());
     }
 
     public void deactivateUser(Long userId) {

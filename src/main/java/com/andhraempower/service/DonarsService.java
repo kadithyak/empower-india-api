@@ -101,4 +101,28 @@ public class DonarsService {
         donarAndProjectInfo.setProjectsInfo(donarsRepository.findProjectInfo(donarId));
         return donarAndProjectInfo;
     }
+
+    public List<DonarDto> searchDonors(String searchTerm) {
+        return convertToDTOList(donarsRepository.searchDonors(searchTerm));
+    }
+
+    public List<DonarDto> convertToDTOList(List<Donar> donars) {
+        return donars.stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+    }
+
+    public DonarDto convertToDTO(Donar donar) {
+        if (donar == null) {
+            return null;
+        }
+        return DonarDto.builder()
+                .id(donar.getId())
+                .firstName(donar.getFirstName())
+                .lastName(donar.getLastName())
+                .phoneNumber(donar.getPhoneNumber())
+                .email(donar.getEmail())
+                .address(donar.getAddress())
+                .build();
+    }
 }

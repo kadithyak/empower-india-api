@@ -23,18 +23,14 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findById(Long id);
 
     @Query("SELECT u FROM User u WHERE " +
-            "(:firstName IS NULL OR u.firstName LIKE %:firstName%) AND " +
-            "(:lastName IS NULL OR u.lastName LIKE %:lastName%) AND " +
-            "(:phoneNumber IS NULL OR u.phoneNumber = :phoneNumber) AND " +
-            "(:email IS NULL OR u.email = :email) AND " +
+            "(:searchTerm IS NULL OR " +
+            "   LOWER(u.firstName) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR " +
+            "   LOWER(u.lastName) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR " +
+            "   LOWER(u.email) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR " +
+            "   u.phoneNumber LIKE CONCAT('%', :searchTerm, '%')) AND " +
             "(:districtId IS NULL OR u.districtId = :districtId) AND " +
             "(:roleId IS NULL OR :roleId IN (SELECT r.id FROM u.roles r))")
-    List<User> findUsers(
-            @Param("firstName") String firstName,
-            @Param("lastName") String lastName,
-            @Param("phoneNumber") String phoneNumber,
-            @Param("email") String email,
-            @Param("districtId") Integer districtId,
-            @Param("roleId") Integer roleId
-    );
+    List<User> findUsers(@Param("searchTerm") String searchTerm,
+                           @Param("districtId") Long districtId,
+                           @Param("roleId") Long roleId);
 }

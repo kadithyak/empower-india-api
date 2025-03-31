@@ -137,4 +137,24 @@ public class DonarsController {
         return ResponseEntity.ok().body(donarsService.getDonarInfo(donarId));
     }
 
+    /**
+     * API to search for donors based on the provided search term.
+     *
+     * @param searchTerm The search term that will be matched against multiple donor fields.
+     * @return List of donors matching the search term.
+     */
+    @GetMapping("/search")
+    @Operation(summary = "Search Donar by firstName, lastName, phoneNumber, email")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = EmpowerConstants.SUCCESS_CODE, description = EmpowerConstants.SUCCESS_CODE_DESC),
+            @ApiResponse(responseCode = EmpowerConstants.BAD_REQUEST_CODE, description = EmpowerConstants.BAD_REQUEST_CODE_DESC),
+            @ApiResponse(responseCode = EmpowerConstants.UNAUTHORIZED_CODE, description = EmpowerConstants.UNAUTHORIZED_CODE_DESC),
+            @ApiResponse(responseCode = EmpowerConstants.FORBIDDEN_CODE, description = EmpowerConstants.FORBIDDEN_CODE_DESC),
+            @ApiResponse(responseCode = EmpowerConstants.RESOURCE_NOT_FOUND_CODE, description = EmpowerConstants.RESOURCE_NOT_FOUND_CODE_DESC),
+            @ApiResponse(responseCode = EmpowerConstants.UNEXPECTED_SERVER_ERROR_CODE, description = EmpowerConstants.UNEXPECTED_SERVER_ERROR_CODE_DESC)
+    })
+    public ResponseEntity<List<DonarDto>> searchDonors(@RequestParam String searchTerm) {
+        return ResponseEntity.ok().body(donarsService.searchDonors(searchTerm));
+    }
+
 }

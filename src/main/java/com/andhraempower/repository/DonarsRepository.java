@@ -68,4 +68,11 @@ public interface DonarsRepository extends JpaRepository<Donar, Integer> {
           @Param("donarId") Long donarId
   );
 
+  @Query("SELECT d FROM Donar d WHERE "
+          + "(d.firstName LIKE CONCAT('%', :searchTerm, '%')) OR "
+          + "(d.lastName LIKE CONCAT('%', :searchTerm, '%')) OR "
+          + "(d.phoneNumber LIKE CONCAT('%', :searchTerm, '%')) OR "
+          + "(d.email LIKE CONCAT('%', :searchTerm, '%'))")
+  List<Donar> searchDonors(@Param("searchTerm") String searchTerm);
+
 }
