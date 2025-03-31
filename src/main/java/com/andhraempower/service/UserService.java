@@ -9,12 +9,14 @@ import com.andhraempower.exception.InvalidCredentialsException;
 import com.andhraempower.exception.UserAlreadyExistsException;
 import com.andhraempower.exception.UserNotFoundException;
 import com.andhraempower.repository.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -71,7 +73,70 @@ public class UserService {
         if (file != null && !file.isEmpty()) {
             user.setProfilePhoto(file.getBytes());
         }
+        return userRepository.save(user);
+    }
+
+
+    public User updateUser(UserRequestDto userRequestDto, MultipartFile file) throws IOException {
+
+        if (userRequestDto == null) {
+            throw new IllegalArgumentException("User request cannot be null");
+        }
+
+        Optional<User> optionalUser = userRepository.findById(userRequestDto.getId());
+
+        if (!optionalUser.isPresent()) {
+            throw new EntityNotFoundException("User not found with id: " + userRequestDto.getId());
+        }
+
+        User user = optionalUser.get();
+
+        if (userRequestDto.getFirstName() != null) {
+            user.setFirstName(userRequestDto.getFirstName());
+        }
+        if (userRequestDto.getLastName() != null) {
+            user.setLastName(userRequestDto.getLastName());
+        }
+        if (userRequestDto.getPhoneNumber() != null) {
+            user.setPhoneNumber(userRequestDto.getPhoneNumber());
+        }
+        if (userRequestDto.getEmail() != null) {
+            user.setEmail(userRequestDto.getEmail());
+        }
+        if (userRequestDto.getUserName() != null) {
+            user.setUserName(userRequestDto.getUserName());
+        }
+        if (userRequestDto.getPassword() != null) {
+            user.setPassword(userRequestDto.getPassword());
+        }
+        if (userRequestDto.getAboutYourSelf() != null) {
+            user.setAboutYourSelf(userRequestDto.getAboutYourSelf());
+        }
+        if (userRequestDto.getRoles() != null && !userRequestDto.getRoles().isEmpty()) {
+            Map<Long, Role> existingRolesMap = user.getRoles().stream()
+                    .collect(Collectors.toMap(Role::getId, role -> role));
+
+            List<Role> updatedRoles = userRequestDto.getRoles().stream()
+                    .map(roleDto -> {
+                        if (existingRolesMap.containsKey(roleDto.getId())) {
+                            Role existingRole = existingRolesMap.get(roleDto.getId());
+                            existingRole.setName(roleDto.getName());
+                            return existingRole;
+                        } else {
+                            return new Role(roleDto.getId(), roleDto.getName());
+                        }
+                    })
+                    .collect(Collectors.toList());
+            user.setRoles(updatedRoles);
+        }
+        if (file != null && !file.isEmpty()) {
+            user.setProfilePhoto(file.getBytes());
+        }
 
         return userRepository.save(user);
+    }
+
+    public List<UserResponseDto> getAllUsers(String firstName, String lastName, String phoneNumber, String email, Integer districtId, Integer roleId) {
+        return userRepository.findUsers(firstName, lastName, phoneNumber, email, districtId, roleId).stream().map(UserResponseDto::new).collect(Collectors.toList());
     }
 }

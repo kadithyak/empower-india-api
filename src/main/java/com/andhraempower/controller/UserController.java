@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 
 @CrossOrigin
 @RestController
@@ -53,11 +54,57 @@ public class UserController {
             @ApiResponse(responseCode = EmpowerConstants.RESOURCE_NOT_FOUND_CODE, description = EmpowerConstants.RESOURCE_NOT_FOUND_CODE_DESC),
             @ApiResponse(responseCode = EmpowerConstants.UNEXPECTED_SERVER_ERROR_CODE, description = EmpowerConstants.UNEXPECTED_SERVER_ERROR_CODE_DESC)
     })
-    public ResponseEntity<?> createUserWithPhoto(@RequestPart("user") UserRequestDto userRequestDto,
-                                                 @RequestPart(value = "profilePhoto", required = false) MultipartFile file) throws IOException {
+    public ResponseEntity<UserResponseDto> createUserWithPhoto(
+            @RequestPart("user") UserRequestDto userRequestDto,
+            @RequestPart(value = "profilePhoto", required = false) MultipartFile file) throws IOException {
 
-        User user = userService.createUser(userRequestDto,file);
+        User user;
+        if (userRequestDto.getId() != null) {
+            user = userService.updateUser(userRequestDto, file);
+        } else {
+            user = userService.createUser(userRequestDto, file);
+        }
         UserResponseDto response = new UserResponseDto(user);
         return ResponseEntity.ok(response);
+    }
+
+
+    @Operation(summary = "Create a new user without roles.")
+    @PutMapping()
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = EmpowerConstants.SUCCESS_CODE, description = EmpowerConstants.SUCCESS_CODE_DESC),
+            @ApiResponse(responseCode = EmpowerConstants.BAD_REQUEST_CODE, description = EmpowerConstants.BAD_REQUEST_CODE_DESC),
+            @ApiResponse(responseCode = EmpowerConstants.UNAUTHORIZED_CODE, description = EmpowerConstants.UNAUTHORIZED_CODE_DESC),
+            @ApiResponse(responseCode = EmpowerConstants.FORBIDDEN_CODE, description = EmpowerConstants.FORBIDDEN_CODE_DESC),
+            @ApiResponse(responseCode = EmpowerConstants.RESOURCE_NOT_FOUND_CODE, description = EmpowerConstants.RESOURCE_NOT_FOUND_CODE_DESC),
+            @ApiResponse(responseCode = EmpowerConstants.UNEXPECTED_SERVER_ERROR_CODE, description = EmpowerConstants.UNEXPECTED_SERVER_ERROR_CODE_DESC)
+    })
+    public ResponseEntity<UserResponseDto> updateUser(@RequestBody UserRequestDto userRequestDto) throws IOException {
+        User user = userService.createUser(userRequestDto, null);
+        UserResponseDto response = new UserResponseDto(user);
+        return ResponseEntity.ok(response);
+    }
+
+
+    @Operation(summary = "Get all available roles.")
+    @GetMapping()
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = EmpowerConstants.SUCCESS_CODE, description = EmpowerConstants.SUCCESS_CODE_DESC),
+            @ApiResponse(responseCode = EmpowerConstants.BAD_REQUEST_CODE, description = EmpowerConstants.BAD_REQUEST_CODE_DESC),
+            @ApiResponse(responseCode = EmpowerConstants.UNAUTHORIZED_CODE, description = EmpowerConstants.UNAUTHORIZED_CODE_DESC),
+            @ApiResponse(responseCode = EmpowerConstants.FORBIDDEN_CODE, description = EmpowerConstants.FORBIDDEN_CODE_DESC),
+            @ApiResponse(responseCode = EmpowerConstants.RESOURCE_NOT_FOUND_CODE, description = EmpowerConstants.RESOURCE_NOT_FOUND_CODE_DESC),
+            @ApiResponse(responseCode = EmpowerConstants.UNEXPECTED_SERVER_ERROR_CODE, description = EmpowerConstants.UNEXPECTED_SERVER_ERROR_CODE_DESC)
+    })
+    public ResponseEntity<List<UserResponseDto>> getUsers(
+            @RequestParam(required = false) String firstName,
+            @RequestParam(required = false) String lastName,
+            @RequestParam(required = false) String phoneNumber,
+            @RequestParam(required = false) String email,
+            @RequestParam(required = false) Integer districtId,
+            @RequestParam(required = false) Integer roleId) {
+
+        List<UserResponseDto> userResponseDto = userService.getAllUsers(firstName, lastName, phoneNumber, email, districtId, roleId);
+        return ResponseEntity.ok(userResponseDto);
     }
 }

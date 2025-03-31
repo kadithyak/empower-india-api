@@ -29,6 +29,8 @@ public class UserResponseDto {
 
     private byte[] profilePhoto;
 
+    private Integer districtId;
+
     public UserResponseDto(User user) {
         this.id = user.getId();
         this.firstName = user.getFirstName();
@@ -44,6 +46,7 @@ public class UserResponseDto {
             this.roles = List.of();
         }
         this.profilePhoto = user.getProfilePhoto();
+        this.districtId = user.getDistrictId();
 
     }
 

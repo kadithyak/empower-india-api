@@ -12,6 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 public class UserRequestDto {
 
+    private Long id;
     private String firstName;
     private String lastName;
     private String phoneNumber;
@@ -19,6 +20,7 @@ public class UserRequestDto {
     private String userName;
     private String password;
     private String aboutYourSelf;
+    private Integer districtId;
     private List<RoleDto> roles = new ArrayList<>();
 
 
