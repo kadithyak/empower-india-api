@@ -73,15 +73,12 @@ public class UserService {
         if (file != null && !file.isEmpty()) {
             user.setProfilePhoto(file.getBytes());
         }
+        user.setIsEnabled(1);  //for active user
         return userRepository.save(user);
     }
 
 
     public User updateUser(UserRequestDto userRequestDto, MultipartFile file) throws IOException {
-
-        if (userRequestDto == null) {
-            throw new IllegalArgumentException("User request cannot be null");
-        }
 
         Optional<User> optionalUser = userRepository.findById(userRequestDto.getId());
 
@@ -138,5 +135,13 @@ public class UserService {
 
     public List<UserResponseDto> getAllUsers(String firstName, String lastName, String phoneNumber, String email, Integer districtId, Integer roleId) {
         return userRepository.findUsers(firstName, lastName, phoneNumber, email, districtId, roleId).stream().map(UserResponseDto::new).collect(Collectors.toList());
+    }
+
+    public void deactivateUser(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException("User does not exist with ID: " + userId));
+
+        user.setIsEnabled(0); // Soft delete: setting isEnabled
+        userRepository.save(user);
     }
 }

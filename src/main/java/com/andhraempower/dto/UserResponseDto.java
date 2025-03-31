@@ -31,6 +31,8 @@ public class UserResponseDto {
 
     private Integer districtId;
 
+    private Integer isEnabled;
+
     public UserResponseDto(User user) {
         this.id = user.getId();
         this.firstName = user.getFirstName();
@@ -47,6 +49,7 @@ public class UserResponseDto {
         }
         this.profilePhoto = user.getProfilePhoto();
         this.districtId = user.getDistrictId();
+        this.isEnabled = user.getIsEnabled();
 
     }
 

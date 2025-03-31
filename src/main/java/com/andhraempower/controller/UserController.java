@@ -107,4 +107,20 @@ public class UserController {
         List<UserResponseDto> userResponseDto = userService.getAllUsers(firstName, lastName, phoneNumber, email, districtId, roleId);
         return ResponseEntity.ok(userResponseDto);
     }
+
+    @Operation(summary = "Deactivate a user (soft delete).")
+    @PutMapping("/{userId}")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = EmpowerConstants.SUCCESS_CODE, description = EmpowerConstants.SUCCESS_CODE_DESC),
+            @ApiResponse(responseCode = EmpowerConstants.BAD_REQUEST_CODE, description = EmpowerConstants.BAD_REQUEST_CODE_DESC),
+            @ApiResponse(responseCode = EmpowerConstants.UNAUTHORIZED_CODE, description = EmpowerConstants.UNAUTHORIZED_CODE_DESC),
+            @ApiResponse(responseCode = EmpowerConstants.FORBIDDEN_CODE, description = EmpowerConstants.FORBIDDEN_CODE_DESC),
+            @ApiResponse(responseCode = EmpowerConstants.RESOURCE_NOT_FOUND_CODE, description = EmpowerConstants.RESOURCE_NOT_FOUND_CODE_DESC),
+            @ApiResponse(responseCode = EmpowerConstants.UNEXPECTED_SERVER_ERROR_CODE, description = EmpowerConstants.UNEXPECTED_SERVER_ERROR_CODE_DESC)
+    })
+    public ResponseEntity<String> deactivateUser(@PathVariable Long userId) {
+
+        userService.deactivateUser(userId);
+        return ResponseEntity.ok("Successfully deactivated user.");
+    }
 }

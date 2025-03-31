@@ -58,4 +58,7 @@ public class User extends Audit{
     )
     private List<Role> roles = new ArrayList<>();
 
+    @Column(name = "is_enabled")
+    private Integer isEnabled;
+
 }
