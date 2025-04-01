@@ -56,9 +56,9 @@ jobs:
       - name: Login to Azure
         uses: azure/login@v2
         with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_C38D3A713FA14C0D81B76B5CAFD05194 }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_EB92603F59424A22AB859A0946C5F8D3 }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_692F6C61C4FE428D939F1BCB377F962D }}
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_8B45466DF382446AA0A360B2DF70FE5D }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_3DD69C355D004E8382722905DFB6ABA8 }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_87CB8ACB638D4D2AB1FBA51CB1BC24CB }}
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
@@ -66,5 +66,5 @@ jobs:
         with:
           app-name: 'empowerindia-api'
           slot-name: 'Production'
-          package: '*.jar'
+          package: '*0.0.1-SNAPSHOT.jar'
           
