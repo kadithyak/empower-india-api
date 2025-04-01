@@ -21,21 +21,17 @@ jobs:
       - name: Set up Java version
         uses: actions/setup-java@v4
         with:
-          java-version: '21'
+          java-version: 'java21'
           distribution: 'microsoft'
 
-      - name: Grant execute permission to Gradle wrapper
-        run: chmod +x gradlew
-  
-
-      - name: Build with Gradle
-        run: ./gradlew clean build
+      - name: Build with Maven
+        run: mvn clean install
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
           name: java-app
-          path: '${{ github.workspace }}/build/libs/*.jar'
+          path: '${{ github.workspace }}/target/*.jar'
 
   deploy:
     runs-on: ubuntu-latest
@@ -43,28 +39,18 @@ jobs:
     environment:
       name: 'Production'
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
-    permissions:
-      id-token: write #This is required for requesting the JWT
-      contents: read #This is required for actions/checkout
-  
+      
     steps:
       - name: Download artifact from build job
         uses: actions/download-artifact@v4
         with:
           name: java-app
       
-      - name: Login to Azure
-        uses: azure/login@v2
-        with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_8B45466DF382446AA0A360B2DF70FE5D }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_3DD69C355D004E8382722905DFB6ABA8 }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_87CB8ACB638D4D2AB1FBA51CB1BC24CB }}
-
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
         with:
           app-name: 'empowerindia-api'
           slot-name: 'Production'
-          package: '*0.0.1-SNAPSHOT.jar'
-          
+          package: '*.jar'
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_5305B271276D4D0F8378D14AFCD0097B }}
