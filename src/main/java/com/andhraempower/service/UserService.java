@@ -74,6 +74,7 @@ public class UserService {
         if (file != null && !file.isEmpty()) {
             user.setProfilePhoto(file.getBytes());
         }
+        user.setDistrictId(userRequestDto.getDistrictId());
         user.setIsEnabled(1);  //for active user
         return userRepository.save(user);
     }
@@ -109,6 +110,10 @@ public class UserService {
         }
         if (userRequestDto.getAboutYourSelf() != null) {
             user.setAboutYourSelf(userRequestDto.getAboutYourSelf());
+        }
+
+        if (userRequestDto.getDistrictId() != null) {
+            user.setDistrictId(userRequestDto.getDistrictId());
         }
         if (userRequestDto.getRoles() != null && !userRequestDto.getRoles().isEmpty()) {
             Map<Long, Role> existingRolesMap = user.getRoles().stream()
