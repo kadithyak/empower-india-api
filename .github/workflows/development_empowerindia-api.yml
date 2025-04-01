@@ -21,21 +21,17 @@ jobs:
       - name: Set up Java version
         uses: actions/setup-java@v4
         with:
-          java-version: '21'
+          java-version: 'java21'
           distribution: 'microsoft'
 
-      - name: Grant execute permission to Gradle wrapper
-        run: chmod +x gradlew
-  
-
-      - name: Build with Gradle
-        run: ./gradlew clean build
+      - name: Build with Maven
+        run: mvn clean install
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
           name: java-app
-          path: '${{ github.workspace }}/build/libs/*.jar'
+          path: '${{ github.workspace }}/target/*.jar'
 
   deploy:
     runs-on: ubuntu-latest
@@ -56,9 +52,9 @@ jobs:
       - name: Login to Azure
         uses: azure/login@v2
         with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_8B45466DF382446AA0A360B2DF70FE5D }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_3DD69C355D004E8382722905DFB6ABA8 }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_87CB8ACB638D4D2AB1FBA51CB1BC24CB }}
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_4F25491A60C84A669758081C32FD2E92 }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_8508C5C5F7564626886B0D59167569FB }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_AA6D03FEF8A041B0B91017580AAFA543 }}
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
@@ -66,5 +62,5 @@ jobs:
         with:
           app-name: 'empowerindia-api'
           slot-name: 'Production'
-          package: '*0.0.1-SNAPSHOT.jar'
+          package: '*.jar'
           
